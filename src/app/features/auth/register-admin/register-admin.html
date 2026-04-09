@@ -1,0 +1,109 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="mat-headline-medium">Register New Admin</h1>
+    <p class="mat-body-medium muted">Create a new admin account. Requires an active admin session.</p>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <!-- Success -->
+      @if (successMessage()) {
+        <div class="alert alert--success" role="status">
+          <mat-icon>check_circle</mat-icon>
+          {{ successMessage() }}
+        </div>
+      }
+
+      <!-- Error -->
+      @if (errorMessage()) {
+        <div class="alert alert--error" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="form-grid">
+          <!-- Username -->
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Username</mat-label>
+            <input matInput id="reg-username" formControlName="username" placeholder="5–20 chars, no spaces" autocomplete="off" />
+            @if (f['username'].errors?.['required']) {
+              <mat-error>Username is required.</mat-error>
+            } @else if (f['username'].errors?.['minlength']) {
+              <mat-error>At least 5 characters.</mat-error>
+            } @else if (f['username'].errors?.['maxlength']) {
+              <mat-error>At most 20 characters.</mat-error>
+            } @else if (f['username'].errors?.['whitespace']) {
+              <mat-error>No spaces allowed.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Full Name -->
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Full Name</mat-label>
+            <input matInput id="reg-name" formControlName="name" placeholder="Display name" autocomplete="off" />
+            @if (f['name'].errors?.['required']) {
+              <mat-error>Name is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Password -->
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Password</mat-label>
+            <input matInput id="reg-password" type="password" formControlName="password" placeholder="At least 8 characters" autocomplete="new-password" />
+            @if (f['password'].errors?.['required']) {
+              <mat-error>Password is required.</mat-error>
+            } @else if (f['password'].errors?.['minlength']) {
+              <mat-error>At least 8 characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Confirm Password -->
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput id="reg-confirm" type="password" formControlName="confirmPassword" placeholder="Re-enter password" autocomplete="new-password" />
+          </mat-form-field>
+          @if (form.errors?.['mismatch'] && f['confirmPassword'].touched) {
+            <p class="mismatch-error">Passwords do not match.</p>
+          }
+
+          <!-- Gender slider -->
+          <div class="field-full">
+            <label class="slider-label">
+              Gender
+              <span class="gender-chip">{{ genderLabel() }}</span>
+            </label>
+            <div class="slider-row">
+              <span class="slider-cap">Male</span>
+              <mat-slider min="0" max="1" step="0.01" class="flex-slider">
+                <input matSliderThumb formControlName="gender" />
+              </mat-slider>
+              <span class="slider-cap">Female</span>
+            </div>
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="field-full">
+            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
+              <mat-label>Date of Birth</mat-label>
+              <input matInput type="date" formControlName="dob" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-card-actions align="end">
+          <button mat-flat-button type="submit" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <mat-spinner diameter="18"></mat-spinner>
+              Creating…
+            } @else {
+              Create Admin Account
+            }
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+

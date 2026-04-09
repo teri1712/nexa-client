@@ -1,0 +1,18 @@
+<div class="page">
+  <!-- Welcome hero -->
+  <div class="hero">
+    <div class="hero-avatar">{{ (profile()?.name ?? 'U')[0].toUpperCase() }}</div>
+    <div class="hero-text">
+      <h1 class="hero-title">Welcome back, {{ profile()?.name ?? 'there' }}!</h1>
+      <p class="hero-sub">
+        You're signed in as
+        <mat-chip-set>
+          <mat-chip [highlighted]="isAdmin()" [color]="isAdmin() ? 'primary' : undefined">
+            {{ profile()?.role }}
+          </mat-chip>
+        </mat-chip-set>
+      </p>
+    </div>
+  </div>
+</div>
+

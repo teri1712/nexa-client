@@ -1,0 +1,78 @@
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-header {
+  h1 { margin: 0 0 0.25rem; }
+  p { margin: 0; }
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem !important;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+
+  mat-form-field { width: 100%; }
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+/* ── Slider ─────────────────────────────────────────────────────────────── */
+.slider-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  margin-bottom: 0.25rem;
+}
+
+.gender-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+
+.flex-slider {
+  flex: 1;
+  width: 100%;
+}
+
+.mismatch-error {
+  grid-column: 2 / 3;
+  margin: -0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--mat-sys-error);
+  padding-left: 1rem;
+}
+

@@ -1,0 +1,110 @@
+<div class="login-page">
+  <mat-card class="login-card">
+    <mat-card-content>
+      <!-- Brand -->
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <h1 class="brand-name">Nexa</h1>
+        <p class="brand-tagline">Your company document hub</p>
+      </div>
+
+      <!-- Error banner -->
+      @if (errorMessage()) {
+        <div class="alert alert--error" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Google Sign-In section -->
+      @if (!showAdminForm()) {
+        <p class="section-label">Sign in with your company account</p>
+
+        @if (isGoogleLoading()) {
+          <div class="loading-row">
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Signing you in…</span>
+          </div>
+        } @else {
+          <div id="google-signin-btn" class="google-btn-wrapper">
+            @if (!googleScriptReady()) {
+              <div class="google-fallback">
+                <mat-spinner diameter="16"></mat-spinner>
+                Loading Google Sign-In…
+              </div>
+            }
+          </div>
+        }
+
+        <div class="divider"><span>or</span></div>
+
+        <button mat-button type="button" (click)="toggleAdminForm()">
+          Sign in as Admin
+          <mat-icon iconPositionEnd>chevron_right</mat-icon>
+        </button>
+      }
+
+      <!-- Admin login form -->
+      @if (showAdminForm()) {
+        <div class="admin-section">
+          <button mat-button type="button" (click)="toggleAdminForm()">
+            <mat-icon>chevron_left</mat-icon>
+            Back
+          </button>
+          <h2 class="admin-title">Admin Sign in</h2>
+
+          <form [formGroup]="adminForm" (ngSubmit)="submitAdminLogin()" novalidate>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Username</mat-label>
+              <input
+                matInput
+                id="username"
+                formControlName="username"
+                autocomplete="username"
+                placeholder="Enter your username"
+              />
+              @if (usernameCtrl.errors?.['required']) {
+                <mat-error>Username is required.</mat-error>
+              } @else if (usernameCtrl.errors?.['minlength']) {
+                <mat-error>Minimum 5 characters.</mat-error>
+              } @else if (usernameCtrl.errors?.['maxlength']) {
+                <mat-error>Maximum 20 characters.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                id="password"
+                type="password"
+                formControlName="password"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+              />
+              @if (passwordCtrl.errors?.['required']) {
+                <mat-error>Password is required.</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              type="submit"
+              id="vcll"
+              class="full-width submit-btn"
+              [disabled]="isAdminLoading()"
+            >
+              @if (isAdminLoading()) {
+                <mat-spinner diameter="18"></mat-spinner>
+                Signing in…
+              } @else {
+                Sign In
+              }
+            </button>
+          </form>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
+
