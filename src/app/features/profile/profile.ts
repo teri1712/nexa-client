@@ -11,8 +11,8 @@ import {MatSliderModule} from '@angular/material/slider';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {ProfileService} from '../../core/services/profile.service';
-import {TokenStore} from '../../core/services/token-store.service';
-import {AuthService} from '../../core/services/auth.service';
+import {ITokenStore} from '../../core/models/token-store.interface';
+import {IAuthService} from '../../core/models/auth-service.interface';
 import {ProblemDetail} from '../../core/models/auth.models';
 
 type Tab = 'profile' | 'security';
@@ -37,8 +37,8 @@ type Tab = 'profile' | 'security';
 export class ProfileComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
-  private readonly authService = inject(AuthService);
-  readonly tokenService = inject(TokenStore);
+  private readonly authService = inject(IAuthService);
+  readonly tokenService = inject(ITokenStore);
 
   protected readonly activeTab = signal<Tab>('profile');
   protected readonly isProfileLoading = signal(false);

@@ -8,8 +8,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from '../../../core/services/auth.service';
-import {TokenStore} from '../../../core/services/token-store.service';
+import {IAuthService} from '../../../core/models/auth-service.interface';
+import {ITokenStore} from '../../../core/models/token-store.interface';
 import {ProblemDetail} from '../../../core/models/auth.models';
 import {environment} from '../../../../environments/environment';
 
@@ -40,8 +40,8 @@ declare const google: {
 })
 export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
-  private readonly tokenService = inject(TokenStore);
+  private readonly authService = inject(IAuthService);
+  private readonly tokenService = inject(ITokenStore);
   private readonly router = inject(Router);
   private readonly ngZone = inject(NgZone);
 

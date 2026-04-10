@@ -1,9 +1,9 @@
 import {inject} from '@angular/core';
 import {CanActivateFn, Router} from '@angular/router';
-import {TokenStore} from '../services/token-store.service';
+import {ITokenStore} from '../models/token-store.interface';
 
 export const authGuard: CanActivateFn = () => {
-  const tokenService = inject(TokenStore);
+  const tokenService = inject(ITokenStore);
   const router = inject(Router);
   // Read access token directly from localStorage for reliability in zoneless mode.
   // The signal-based isLoggedIn() may lag behind during XHR-triggered navigation.

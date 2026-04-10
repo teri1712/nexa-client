@@ -42,7 +42,47 @@
 
 ---
 
-# 2026-04-10 – Session management improvements
+# 2026-04-10 – DI decoupling: AuthService extends TokenStore + IAuthService interface
+
+## Prompt
+> AuthService extends TokenStore (single owner of session state).
+> Decouple clients with IAuthService interface so they inject the interface, not the impl.
+
+## What was done
+
+### `AuthService` now extends `TokenStore`
+- Removed the `TokenStore` field injection from `AuthService`.
+- `AuthService` inherits all signals and mutation methods from `TokenStore`.
+- `TokenStore` loses `providedIn: 'root'`; `AuthService` is the single root instance.
+- `this.tokenStore.xxx()` calls become `this.xxx()` throughout `AuthService`.
+
+### New `IAuthService` abstract class (`core/models/auth-service.interface.ts`)
+- Exposes `loginWithOidc`, `loginWithCredentials`, `registerAdmin`, `logout`.
+- Components inject this instead of `AuthService` — hides all token-store internals.
+
+### `ITokenStore` updated (`core/models/token-store.interface.ts`)
+- Added `getAccessToken(): string | null` so guards can do raw localStorage checks.
+
+### `app.config.ts` — three aliases to the single `AuthService` instance
+- `{ provide: TokenStore, useExisting: AuthService }`
+- `{ provide: ITokenStore, useExisting: AuthService }`
+- `{ provide: IAuthService, useExisting: AuthService }`
+
+### `auth.interceptor.ts`
+- Injects `AuthService` directly (the concrete class with full token-mutation access).
+- Comment clarifies it's the only caller of mutation methods during auto-refresh.
+
+### All consumers now inject interfaces
+- `app.ts` → `ITokenStore` + `IAuthService`
+- `profile.ts` → `ITokenStore` + `IAuthService`
+- `login.ts` → `ITokenStore` + `IAuthService`
+- `register-admin.ts` → `IAuthService`
+- `auth.guard.ts` → `ITokenStore`
+- `admin.guard.ts` → `ITokenStore`
+
+## Test status
+✅ All 23 E2E tests pass (login: 7, profile: 9, register-admin: 7)
+
 
 ## Prompt
 > TokenService → TokenStore rename (done externally); then:

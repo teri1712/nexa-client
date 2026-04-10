@@ -1,12 +1,14 @@
 import {HttpBackend, HttpClient, HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {catchError, EMPTY, switchMap, throwError} from 'rxjs';
-import {TokenStore} from '../services/token-store.service';
+import {AuthService} from '../services/auth.service';
 import {AccountResponse} from '../models/auth.models';
 import {environment} from '../../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const tokenStore = inject(TokenStore);
+  // Inject the concrete AuthService — it IS the token store (extends TokenStore).
+  // The interceptor is the only caller of token-mutation methods during auto-refresh.
+  const tokenStore = inject(AuthService);
   const backend = inject(HttpBackend);
 
   // Skip refresh retry if session is already known expired

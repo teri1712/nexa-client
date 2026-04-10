@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../../core/services/auth.service';
+import { IAuthService } from '../../../core/models/auth-service.interface';
 import { ProblemDetail } from '../../../core/models/auth.models';
 
 function noWhitespace(control: AbstractControl): ValidationErrors | null {
@@ -45,7 +45,7 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
 })
 export class RegisterAdminComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
+  private readonly authService = inject(IAuthService);
   private readonly router = inject(Router);
 
   protected readonly isLoading = signal(false);

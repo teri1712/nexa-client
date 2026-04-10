@@ -12,5 +12,7 @@ export abstract class ITokenStore {
   abstract readonly isAdmin: Signal<boolean>;
   /** Becomes true when the refresh token has been invalidated server-side. */
   abstract readonly sessionExpired: Signal<boolean>;
+  /** Raw access token from storage — use for guard checks where signal timing may lag. */
+  abstract getAccessToken(): string | null;
 }
 

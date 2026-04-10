@@ -8,7 +8,7 @@ const KEYS = {
   PROFILE: 'nexa_profile',
 } as const;
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class TokenStore implements ITokenStore {
   private readonly _profile = signal<ProfileResponse | null>(this._loadProfile());
   private readonly _sessionExpired = signal(false);

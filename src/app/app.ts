@@ -4,8 +4,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {TokenStore} from './core/services/token-store.service';
-import {AuthService} from './core/services/auth.service';
+import {ITokenStore} from './core/models/token-store.interface';
+import {IAuthService} from './core/models/auth-service.interface';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +14,8 @@ import {AuthService} from './core/services/auth.service';
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly tokenService = inject(TokenStore);
-  protected readonly authService = inject(AuthService);
+  protected readonly tokenService = inject(ITokenStore);
+  protected readonly authService = inject(IAuthService);
   private readonly snackBar = inject(MatSnackBar);
 
   constructor() {
