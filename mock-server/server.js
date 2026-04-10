@@ -9,6 +9,7 @@ const {v4: uuidv4} = require('uuid');
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false })); // parse form-encoded bodies (refresh_token, etc.)
 app.use((req, res, next) => {
   console.log(req.method, req.path, req.body)
   next()
@@ -115,9 +116,9 @@ app.post('/user-login', (req, res) => {
   res.json(toAccountResponse(user));
 });
 
-// POST /tokens/refresh?refresh_token=<token>
+// POST /tokens/refresh  (refresh_token in form-encoded body)
 app.post('/tokens/refresh', (req, res) => {
-  const rawToken = req.query.refresh_token;
+  const rawToken = req.body?.refresh_token;
   if (!rawToken) return res.status(401).json({title: 'Unauthorized', status: 401});
   try {
     const {userId} = JSON.parse(Buffer.from(rawToken, 'base64').toString());
@@ -129,7 +130,7 @@ app.post('/tokens/refresh', (req, res) => {
   }
 });
 
-// POST /logout?refresh_token=<token>
+// POST /logout  (refresh_token in form-encoded body)
 app.post('/logout', (req, res) => {
   // In the real server this invalidates the refresh token server-side.
   // Mock just acknowledges the request.

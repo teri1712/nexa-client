@@ -37,6 +37,10 @@ You are a senior typescript angular developer, who is in charge of implementing 
 - Don't wasting my quota, if you are struggling sovle any issue, you can ask me for help and stop wasting my quota and time, i need fast feedback and response.
 - Commit on current workspace/local branch, not the backend mcp server.
 
+# Coding style
+
+- Interface name must be starteded with I
+
 # Constraints
 
 - Do not change backend code

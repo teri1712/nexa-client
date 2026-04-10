@@ -1,4 +1,4 @@
-import {HttpBackend, HttpClient, HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpErrorResponse, HttpInterceptorFn, HttpParams} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {catchError, EMPTY, switchMap, throwError} from 'rxjs';
 import {AuthService} from '../services/auth.service';
@@ -38,10 +38,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
         // Use HttpBackend to bypass interceptor chain for the refresh call
         const http = new HttpClient(backend);
+        const body = new HttpParams().set('refresh_token', refreshToken);
         return http
           .post<AccountResponse>(
-            `${environment.apiUrl}/tokens/refresh?refresh_token=${encodeURIComponent(refreshToken)}`,
-            null,
+            `${environment.apiUrl}/tokens/refresh`,
+            body,
           )
           .pipe(
             switchMap(res => {

@@ -1,9 +1,10 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {tap} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {AccountResponse, AdminLoginRequest, ProfileResponse, SignUpRequest} from '../models/auth.models';
+import {IAuthService} from '../models/auth-service.interface';
 import {TokenStore} from './token-store.service';
 
 /**
@@ -13,7 +14,7 @@ import {TokenStore} from './token-store.service';
  * Components never inject this class directly; they use IAuthService / ITokenStore.
  */
 @Injectable({providedIn: 'root'})
-export class AuthService extends TokenStore {
+export class AuthService extends TokenStore implements IAuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly base = environment.apiUrl;
@@ -40,14 +41,15 @@ export class AuthService extends TokenStore {
   }
 
   /**
-   * Logout: notifies the server to invalidate the refresh token,
+   * Logout: sends refresh token as form-encoded body so the server can invalidate it,
    * then clears the local session and navigates to login.
    */
   logout(): void {
     const refreshToken = this.getRefreshToken();
     if (refreshToken) {
+      const body = new HttpParams().set('refresh_token', refreshToken);
       this.http
-        .post(`${this.base}/logout?refresh_token=${encodeURIComponent(refreshToken)}`, null)
+        .post(`${this.base}/logout`, body)
         .subscribe({error: () => {}});
     }
     this.clearSession();
