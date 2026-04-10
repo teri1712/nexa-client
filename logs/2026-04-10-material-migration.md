@@ -40,3 +40,53 @@
 ## Build status
 ✅ `ng build --configuration development` — successful, no errors.
 
+---
+
+# 2026-04-10 – Session management improvements
+
+## Prompt
+> TokenService → TokenStore rename (done externally); then:
+> - Logout must send refresh token as `?refresh_token=` query param
+> - After changing password, auto re-login admin instead of forcing logout
+> - Decouple read/write on TokenStore via `ITokenStore` abstract class + `sessionExpired` signal
+> - When session expires, show snackbar with "Sign out" action
+
+## What was done
+
+### `ITokenStore` abstract class (`token-store.interface.ts`)
+- Created read-only DI interface exposing `profile`, `isLoggedIn`, `isAdmin`, `sessionExpired` signals.
+- Provided in `app.config.ts` as `{ provide: ITokenStore, useExisting: TokenStore }`.
+
+### `TokenStore` (`token-store.service.ts`)
+- Added `sessionExpired` readonly signal.
+- Added `markSessionExpired()` — called when refresh token is invalidated.
+- Added `updateAccessToken()` — updates only the access token in localStorage (used after refresh).
+- `storeSession()` now resets `sessionExpired` to `false` on fresh login.
+- Implements `ITokenStore`.
+
+### `AuthService` (`auth.service.ts`)
+- `logout()` now POSTs to `/logout?refresh_token=<token>` (fire-and-forget) before clearing local session.
+- `loginWithCredentials()` is now used post-password-change for auto re-login.
+
+### `AuthInterceptor` (`auth.interceptor.ts`)
+- Token refresh now uses `POST /tokens/refresh?refresh_token=<token>` (query param, not Authorization header).
+- On refresh failure: calls `tokenStore.markSessionExpired()` instead of navigating to login.
+
+### `App` root component (`app.ts`)
+- Injected `MatSnackBar`.
+- Added `effect()` watching `tokenStore.sessionExpired()` — opens persistent snackbar "Your session has expired" with "Sign out" action that calls `authService.logout()`.
+
+### `ProfileComponent` (`profile.ts`)
+- `savePassword()`: after success, admin users are auto re-logged in with new password (no forced logout).
+- Non-credential (OIDC) users still get logged out.
+
+### Mock server (`mock-server/server.js`)
+- `POST /tokens/refresh` now reads refresh token from `?refresh_token=` query param (decoded from base64).
+- Added `POST /logout` endpoint — acknowledges request (mock has no server-side session state).
+
+### E2E tests (`cypress/e2e/profile.cy.ts`)
+- Updated: "changing password keeps admin logged in and shows success message" (was: redirects to login).
+- Updated: "after changing password, can log out and re-login with new password" (admin stays on /profile, then explicitly signs out).
+
+## Test status
+✅ All 23 E2E tests pass (login: 7, profile: 9, register-admin: 7)

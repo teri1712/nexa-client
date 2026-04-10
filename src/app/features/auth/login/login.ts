@@ -1,25 +1,17 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  OnDestroy,
-  inject,
-  signal,
-  NgZone,
-} from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../../core/services/auth.service';
-import { TokenService } from '../../../core/services/token.service';
-import { ProblemDetail } from '../../../core/models/auth.models';
-import { environment } from '../../../../environments/environment';
+import {AfterViewInit, Component, inject, NgZone, OnDestroy, OnInit, signal,} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatIconModule} from '@angular/material/icon';
+import {AuthService} from '../../../core/services/auth.service';
+import {TokenStore} from '../../../core/services/token-store.service';
+import {ProblemDetail} from '../../../core/models/auth.models';
+import {environment} from '../../../../environments/environment';
 
 // Google Identity Services global type
 declare const google: {
@@ -49,7 +41,7 @@ declare const google: {
 export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private readonly tokenService = inject(TokenService);
+  private readonly tokenService = inject(TokenStore);
   private readonly router = inject(Router);
   private readonly ngZone = inject(NgZone);
 
@@ -74,7 +66,8 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.waitForGoogleScript();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+  }
 
   private waitForGoogleScript(retries = 20): void {
     if (typeof google !== 'undefined') {
@@ -136,9 +129,9 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isAdminLoading.set(true);
     this.errorMessage.set(null);
 
-    const { username, password } = this.adminForm.value;
+    const {username, password} = this.adminForm.value;
     this.authService
-      .loginWithCredentials({ username: username!, password: password! })
+      .loginWithCredentials({username: username!, password: password!})
       .subscribe({
         next: () => this.router.navigate(['/profile']),
         error: (err: HttpErrorResponse) => {
@@ -156,6 +149,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   get usernameCtrl() {
     return this.adminForm.get('username')!;
   }
+
   get passwordCtrl() {
     return this.adminForm.get('password')!;
   }

@@ -58,7 +58,7 @@ describe('Profile Management', () => {
     cy.get('#s-confirm').should('be.visible');
   });
 
-  it('changing the password with the correct current password logs the admin out and redirects to login', () => {
+  it('changing the password with the correct current password keeps the admin logged in and shows a success message', () => {
     cy.contains('Security').click();
 
     cy.get('#s-current').type('superadmin123');
@@ -66,18 +66,22 @@ describe('Profile Management', () => {
     cy.get('#s-confirm').type('newsecurepassword');
     cy.contains('Update Password').click();
 
-    // After password change the session is invalidated — user lands on login
-    cy.url().should('include', '/auth/login');
+    // Admin is automatically re-logged in — they stay on the profile page
+    cy.url().should('include', '/profile');
+    cy.contains('Password changed successfully').should('be.visible');
   });
 
-  it('the admin can log in again with the newly set password after changing it', () => {
+  it('after changing the password the admin can log out and log back in with the new password', () => {
     // Change the password
     cy.contains('Security').click();
     cy.get('#s-current').type('superadmin123');
     cy.get('#s-new').type('brandnewpassword');
     cy.get('#s-confirm').type('brandnewpassword');
     cy.contains('Update Password').click();
-    cy.url().should('include', '/auth/login');
+
+    // Admin stays on profile — now manually log out
+    cy.url().should('include', '/profile');
+    cy.contains('Sign out').click();
 
     // Log in with the new password
     cy.contains('Sign in as Admin').click();

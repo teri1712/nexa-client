@@ -1,21 +1,22 @@
-import { HttpInterceptorFn, HttpErrorResponse, HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpBackend } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-import { catchError, switchMap, throwError, EMPTY } from 'rxjs';
-import { TokenService } from '../services/token.service';
-import { AccountResponse } from '../models/auth.models';
-import { environment } from '../../../environments/environment';
+import {HttpBackend, HttpClient, HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {catchError, EMPTY, switchMap, throwError} from 'rxjs';
+import {TokenStore} from '../services/token-store.service';
+import {AccountResponse} from '../models/auth.models';
+import {environment} from '../../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const tokenService = inject(TokenService);
-  const router = inject(Router);
+  const tokenStore = inject(TokenStore);
   const backend = inject(HttpBackend);
 
-  const token = tokenService.getAccessToken();
+  // Skip refresh retry if session is already known expired
+  if (tokenStore.sessionExpired()) {
+    return next(req);
+  }
+
+  const token = tokenStore.getAccessToken();
   const authReq = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    ? req.clone({setHeaders: {Authorization: `Bearer ${token}`}})
     : req;
 
   return next(authReq).pipe(
@@ -27,30 +28,30 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       // it is NOT a token-expiry error — pass it straight to the caller.
       const hasProblemDetail = typeof error.error === 'object' && error.error?.detail;
       if (error.status === 401 && !isRefresh && !isLogin && !hasProblemDetail) {
-        const refreshToken = tokenService.getRefreshToken();
+        const refreshToken = tokenStore.getRefreshToken();
         if (!refreshToken) {
-          tokenService.clearSession();
-          router.navigate(['/auth/login']);
+          tokenStore.markSessionExpired();
           return EMPTY;
         }
 
         // Use HttpBackend to bypass interceptor chain for the refresh call
         const http = new HttpClient(backend);
         return http
-          .post<AccountResponse>(`${environment.apiUrl}/tokens/refresh`, null, {
-            headers: new HttpHeaders({ Authorization: `Bearer ${refreshToken}` }),
-          })
+          .post<AccountResponse>(
+            `${environment.apiUrl}/tokens/refresh?refresh_token=${encodeURIComponent(refreshToken)}`,
+            null,
+          )
           .pipe(
             switchMap(res => {
-              tokenService.storeSession(res.profile, res.accessToken);
+              tokenStore.updateAccessToken(res.accessToken.accessToken);
               const retryReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${res.accessToken.accessToken}` },
+                setHeaders: {Authorization: `Bearer ${res.accessToken.accessToken}`},
               });
               return next(retryReq);
             }),
             catchError(() => {
-              tokenService.clearSession();
-              router.navigate(['/auth/login']);
+              // Refresh token is invalid/expired — notify app via signal
+              tokenStore.markSessionExpired();
               return EMPTY;
             }),
           );

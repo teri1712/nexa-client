@@ -115,11 +115,25 @@ app.post('/user-login', (req, res) => {
   res.json(toAccountResponse(user));
 });
 
-// POST /tokens/refresh
+// POST /tokens/refresh?refresh_token=<token>
 app.post('/tokens/refresh', (req, res) => {
-  const user = getUserFromAuthHeader(req.headers.authorization);
-  if (!user) return res.status(401).json({title: 'Unauthorized', status: 401});
-  res.json(toAccountResponse(user));
+  const rawToken = req.query.refresh_token;
+  if (!rawToken) return res.status(401).json({title: 'Unauthorized', status: 401});
+  try {
+    const {userId} = JSON.parse(Buffer.from(rawToken, 'base64').toString());
+    const user = users.find(u => u.id === userId);
+    if (!user) return res.status(401).json({title: 'Unauthorized', status: 401});
+    res.json(toAccountResponse(user));
+  } catch {
+    return res.status(401).json({title: 'Unauthorized', status: 401});
+  }
+});
+
+// POST /logout?refresh_token=<token>
+app.post('/logout', (req, res) => {
+  // In the real server this invalidates the refresh token server-side.
+  // Mock just acknowledges the request.
+  res.status(200).json({ok: true});
 });
 
 // POST /admins — register a new admin (caller must be an existing ADMIN)

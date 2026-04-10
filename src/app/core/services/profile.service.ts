@@ -1,14 +1,14 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { ProfileResponse, ProfileRequest } from '../models/auth.models';
-import { TokenService } from './token.service';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {tap} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {ProfileRequest, ProfileResponse} from '../models/auth.models';
+import {TokenStore} from './token-store.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ProfileService {
   private readonly http = inject(HttpClient);
-  private readonly tokenService = inject(TokenService);
+  private readonly tokenService = inject(TokenStore);
   private readonly base = environment.apiUrl;
 
   getProfile() {
@@ -24,9 +24,9 @@ export class ProfileService {
   }
 
   changePassword(newPassword: string, currentPassword?: string) {
-    const params: Record<string, string> = { new_password: newPassword };
+    const params: Record<string, string> = {new_password: newPassword};
     if (currentPassword) params['password'] = currentPassword;
-    return this.http.post<ProfileResponse>(`${this.base}/profiles/me/password`, null, { params });
+    return this.http.post<ProfileResponse>(`${this.base}/profiles/me/password`, null, {params});
   }
 }
 

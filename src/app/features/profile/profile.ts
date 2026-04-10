@@ -1,25 +1,19 @@
-import {
-  Component,
-  OnInit,
-  inject,
-  signal,
-  computed,
-} from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import { ProfileService } from '../../core/services/profile.service';
-import { TokenService } from '../../core/services/token.service';
-import { AuthService } from '../../core/services/auth.service';
-import { ProblemDetail } from '../../core/models/auth.models';
+import {Component, computed, inject, OnInit, signal,} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {HttpErrorResponse} from '@angular/common/http';
+import {MatCardModule} from '@angular/material/card';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {ProfileService} from '../../core/services/profile.service';
+import {TokenStore} from '../../core/services/token-store.service';
+import {AuthService} from '../../core/services/auth.service';
+import {ProblemDetail} from '../../core/models/auth.models';
 
 type Tab = 'profile' | 'security';
 
@@ -44,7 +38,7 @@ export class ProfileComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
   private readonly authService = inject(AuthService);
-  readonly tokenService = inject(TokenService);
+  readonly tokenService = inject(TokenStore);
 
   protected readonly activeTab = signal<Tab>('profile');
   protected readonly isProfileLoading = signal(false);
@@ -116,7 +110,7 @@ export class ProfileComponent implements OnInit {
     this.profileSuccess.set(null);
     this.profileError.set(null);
 
-    const { name, gender, dob } = this.profileForm.value;
+    const {name, gender, dob} = this.profileForm.value;
     this.profileService
       .updateProfile({
         name: name ?? undefined,
@@ -136,7 +130,7 @@ export class ProfileComponent implements OnInit {
   }
 
   protected savePassword(): void {
-    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
+    const {currentPassword, newPassword, confirmPassword} = this.passwordForm.value;
 
     if (newPassword !== confirmPassword) {
       this.passwordError.set('Passwords do not match.');
@@ -155,8 +149,23 @@ export class ProfileComponent implements OnInit {
       .changePassword(newPassword, currentPassword || undefined)
       .subscribe({
         next: () => {
-          // Feature: "invalidate current session" — clear tokens and redirect to login
-          this.authService.logout();
+          // Auto re-login for admin users (credentials-based) so they stay logged in
+          const username = this.profile()?.username;
+          if (username && this.isAdmin()) {
+            this.authService
+              .loginWithCredentials({username, password: newPassword!})
+              .subscribe({
+                next: () => {
+                  this.isPasswordLoading.set(false);
+                  this.passwordSuccess.set('Password changed successfully.');
+                  this.passwordForm.reset();
+                },
+                error: () => this.authService.logout(),
+              });
+          } else {
+            // Non-credential users (Google OIDC) — clear session
+            this.authService.logout();
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.isPasswordLoading.set(false);
@@ -190,8 +199,8 @@ export class ProfileComponent implements OnInit {
   get pf() {
     return this.profileForm.controls;
   }
+
   get sf() {
     return this.passwordForm.controls;
   }
 }
-
