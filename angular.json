@@ -85,8 +85,7 @@
               "buildTarget": "nexa-client:build:development"
             },
             "test": {
-              "buildTarget": "nexa-client:build:test",
-              "proxyConfig": "proxy.conf.json"
+              "buildTarget": "nexa-client:build:test"
             }
           },
           "defaultConfiguration": "development"

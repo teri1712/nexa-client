@@ -1,164 +1,167 @@
 <div class="page">
-  <!-- Profile hero -->
-  <div class="profile-hero">
-    <div class="avatar">{{ avatarInitials() }}</div>
-    <div class="hero-info">
-      <h1 class="hero-name">{{ profile()?.name }}</h1>
-      <div class="hero-meta">
-        <span class="username">@{{ profile()?.username }}</span>
-        <mat-chip-set>
-          <mat-chip [highlighted]="isAdmin()" [color]="isAdmin() ? 'primary' : undefined">
-            {{ profile()?.role }}
-          </mat-chip>
-        </mat-chip-set>
-      </div>
-    </div>
-  </div>
-
-  <!-- Material Tabs -->
-  <mat-tab-group dynamicHeight>
-    <!-- Profile Info tab -->
-    <mat-tab label="Profile Info">
-      <div class="tab-content">
-        <mat-card>
-          <mat-card-content>
-            @if (profileSuccess()) {
-              <div class="alert alert--success">
-                <mat-icon>check_circle</mat-icon>
-                {{ profileSuccess() }}
-              </div>
-            }
-            @if (profileError()) {
-              <div class="alert alert--error">
-                <mat-icon>error_outline</mat-icon>
-                {{ profileError() }}
-              </div>
-            }
-
-            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
-              <div class="form-grid">
-                <!-- Name -->
-                <mat-form-field appearance="outline" class="field-full">
-                  <mat-label>Full Name</mat-label>
-                  <input matInput id="p-name" formControlName="name" placeholder="Your display name" />
-                  @if (pf['name'].errors?.['required']) {
-                    <mat-error>Name is required.</mat-error>
-                  }
-                </mat-form-field>
-
-                <!-- DOB -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Date of Birth</mat-label>
-                  <input matInput type="date" formControlName="dob" />
-                </mat-form-field>
-
-                <!-- Gender read-only -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Gender (server value)</mat-label>
-                  <input matInput [value]="profile()?.gender ?? '—'" readonly />
-                </mat-form-field>
-
-                <!-- Gender slider -->
-                <div class="field-full">
-                  <label class="slider-label">
-                    Update Gender
-                    <span class="gender-chip">{{ genderLabel() }}</span>
-                  </label>
-                  <div class="slider-row">
-                    <span class="slider-cap">Male</span>
-                    <mat-slider min="0" max="1" step="0.01" class="flex-slider">
-                      <input matSliderThumb formControlName="gender" />
-                    </mat-slider>
-                    <span class="slider-cap">Female</span>
-                  </div>
-                </div>
-              </div>
-
-              <mat-card-actions align="end">
-                <button mat-flat-button type="submit" [disabled]="isProfileLoading()">
-                  @if (isProfileLoading()) {
-                    <mat-spinner diameter="18"></mat-spinner>
-                    Saving…
-                  } @else {
-                    Save Changes
-                  }
-                </button>
-              </mat-card-actions>
-            </form>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </mat-tab>
-
-    <!-- Security tab -->
-    <mat-tab label="Security">
-      <div class="tab-content">
-        <mat-card>
-          <mat-card-content>
-            <div class="section-header">
-              <h2 class="mat-title-medium">Change Password</h2>
-              <p class="mat-body-medium muted">
-                @if (isAdmin()) {
-                  Enter your current password and choose a new one.
-                } @else {
-                  Choose a new password for your account.
-                }
-              </p>
+    <!-- Profile hero -->
+    <div class="profile-hero">
+        <div class="avatar">{{ avatarInitials() }}</div>
+        <div class="hero-info">
+            <h1 class="hero-name">{{ profile()?.name }}</h1>
+            <div class="hero-meta">
+                <span class="username">@{{ profile()?.username }}</span>
+                <mat-chip-set>
+                    <mat-chip [highlighted]="isAdmin()" [color]="isAdmin() ? 'primary' : undefined">
+                        {{ profile()?.role }}
+                    </mat-chip>
+                </mat-chip-set>
             </div>
+        </div>
+    </div>
 
-            @if (passwordSuccess()) {
-              <div class="alert alert--success">
-                <mat-icon>check_circle</mat-icon>
-                {{ passwordSuccess() }}
-              </div>
-            }
-            @if (passwordError()) {
-              <div class="alert alert--error">
-                <mat-icon>error_outline</mat-icon>
-                {{ passwordError() }}
-              </div>
-            }
+    <!-- Material Tabs -->
+    <mat-tab-group dynamicHeight>
+        <!-- Profile Info tab -->
+        <mat-tab label="Profile Info">
+            <div class="tab-content">
+                <mat-card>
+                    <mat-card-content>
+                        @if (profileSuccess()) {
+                            <div class="alert alert--success">
+                                <mat-icon>check_circle</mat-icon>
+                                {{ profileSuccess() }}
+                            </div>
+                        }
+                        @if (profileError()) {
+                            <div class="alert alert--error">
+                                <mat-icon>error_outline</mat-icon>
+                                {{ profileError() }}
+                            </div>
+                        }
 
-            <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" novalidate>
-              <div class="fields-col">
-                @if (isAdmin()) {
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Current Password</mat-label>
-                    <input matInput type="password" id="s-current" formControlName="currentPassword" autocomplete="current-password" />
-                  </mat-form-field>
-                }
+                        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+                            <div class="form-grid">
+                                <!-- Name -->
+                                <mat-form-field appearance="outline" class="field-full">
+                                    <mat-label>Full Name</mat-label>
+                                    <input matInput id="p-name" formControlName="name" placeholder="Your display name"/>
+                                    @if (pf['name'].errors?.['required']) {
+                                        <mat-error>Name is required.</mat-error>
+                                    }
+                                </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>New Password</mat-label>
-                  <input matInput id="s-new" type="password" formControlName="newPassword" placeholder="At least 8 characters" autocomplete="new-password" />
-                  @if (sf['newPassword'].errors?.['required']) {
-                    <mat-error>New password is required.</mat-error>
-                  } @else if (sf['newPassword'].errors?.['minlength']) {
-                    <mat-error>At least 8 characters.</mat-error>
-                  }
-                </mat-form-field>
+                                <!-- DOB -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Date of Birth</mat-label>
+                                    <input matInput type="date" formControlName="dob"/>
+                                </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Confirm New Password</mat-label>
-                  <input matInput id="s-confirm" type="password" formControlName="confirmPassword" autocomplete="new-password" />
-                </mat-form-field>
-              </div>
+                                <!-- Gender read-only -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Gender (server value)</mat-label>
+                                    <input matInput [value]="profile()?.gender ?? '—'" readonly/>
+                                </mat-form-field>
 
-              <mat-card-actions align="end">
-                <button mat-flat-button type="submit" [disabled]="isPasswordLoading()">
-                  @if (isPasswordLoading()) {
-                    <mat-spinner diameter="18"></mat-spinner>
-                    Updating…
-                  } @else {
-                    Update Password
-                  }
-                </button>
-              </mat-card-actions>
-            </form>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+                                <!-- Gender slider -->
+                                <div class="field-full">
+                                    <label class="slider-label">
+                                        Update Gender
+                                        <span class="gender-chip">{{ genderLabel() }}</span>
+                                    </label>
+                                    <div class="slider-row">
+                                        <span class="slider-cap">Male</span>
+                                        <mat-slider min="0" max="1" step="0.01" class="flex-slider">
+                                            <input matSliderThumb formControlName="gender"/>
+                                        </mat-slider>
+                                        <span class="slider-cap">Female</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <mat-card-actions align="end">
+                                <button mat-flat-button type="submit" [disabled]="isProfileLoading()">
+                                    @if (isProfileLoading()) {
+                                        <mat-spinner diameter="18"></mat-spinner>
+                                        Saving…
+                                    } @else {
+                                        Save Changes
+                                    }
+                                </button>
+                            </mat-card-actions>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-tab>
+
+        <!-- Security tab -->
+        <mat-tab label="Security" [disabled]="!tokenService.isAdmin()">
+            <div class="tab-content">
+                <mat-card>
+                    <mat-card-content>
+                        <div class="section-header">
+                            <h2 class="mat-title-medium">Change Password</h2>
+                            <p class="mat-body-medium muted">
+                                @if (isAdmin()) {
+                                    Enter your current password and choose a new one.
+                                } @else {
+                                    Choose a new password for your account.
+                                }
+                            </p>
+                        </div>
+
+                        @if (passwordSuccess()) {
+                            <div class="alert alert--success">
+                                <mat-icon>check_circle</mat-icon>
+                                {{ passwordSuccess() }}
+                            </div>
+                        }
+                        @if (passwordError()) {
+                            <div class="alert alert--error">
+                                <mat-icon>error_outline</mat-icon>
+                                {{ passwordError() }}
+                            </div>
+                        }
+
+                        <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" novalidate>
+                            <div class="fields-col">
+                                @if (isAdmin()) {
+                                    <mat-form-field appearance="outline" class="full-width">
+                                        <mat-label>Current Password</mat-label>
+                                        <input matInput type="password" id="s-current" formControlName="currentPassword"
+                                               autocomplete="current-password"/>
+                                    </mat-form-field>
+                                }
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>New Password</mat-label>
+                                    <input matInput id="s-new" type="password" formControlName="newPassword"
+                                           placeholder="At least 8 characters" autocomplete="new-password"/>
+                                    @if (sf['newPassword'].errors?.['required']) {
+                                        <mat-error>New password is required.</mat-error>
+                                    } @else if (sf['newPassword'].errors?.['minlength']) {
+                                        <mat-error>At least 8 characters.</mat-error>
+                                    }
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>Confirm New Password</mat-label>
+                                    <input matInput id="s-confirm" type="password" formControlName="confirmPassword"
+                                           autocomplete="new-password"/>
+                                </mat-form-field>
+                            </div>
+
+                            <mat-card-actions align="end">
+                                <button mat-flat-button type="submit" [disabled]="isPasswordLoading()">
+                                    @if (isPasswordLoading()) {
+                                        <mat-spinner diameter="18"></mat-spinner>
+                                        Updating…
+                                    } @else {
+                                        Update Password
+                                    }
+                                </button>
+                            </mat-card-actions>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
 </div>
 

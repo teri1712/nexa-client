@@ -9,11 +9,10 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "mock:start": "node mock-server/server.js",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "e2e": "start-server-and-test mock:start http://localhost:3000/health start:test http://localhost:4200 cy:run",
-    "e2e:open": "start-server-and-test mock:start http://localhost:3000/health start:test http://localhost:4200 cy:open"
+    "e2e": "start-server-and-test start:test http://localhost:4200 cy:run",
+    "e2e:open": "start-server-and-test start:test http://localhost:4200 cy:open"
   },
   "private": true,
   "packageManager": "npm@10.9.2",

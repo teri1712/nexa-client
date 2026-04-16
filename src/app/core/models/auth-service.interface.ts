@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {AccountResponse, AdminLoginRequest, ProfileResponse, SignUpRequest} from './auth.models';
+import {AdminLoginRequest, ProfileResponse, SignUpRequest} from './auth.models';
 
 /**
  * Public interface for authentication operations.
@@ -7,9 +7,15 @@ import {AccountResponse, AdminLoginRequest, ProfileResponse, SignUpRequest} from
  * hiding token-store internals behind a clean contract.
  */
 export abstract class IAuthService {
-  abstract loginWithOidc(idToken: string): Observable<AccountResponse>;
-  abstract loginWithCredentials(credentials: AdminLoginRequest): Observable<AccountResponse>;
-  abstract registerAdmin(data: SignUpRequest): Observable<ProfileResponse>;
-  abstract logout(): void;
+      
+      abstract loginWithOidc(idToken: string): Observable<ProfileResponse>;
+
+      abstract loginWithCredentials(credentials: AdminLoginRequest): Observable<ProfileResponse>;
+
+      abstract registerAdmin(data: SignUpRequest): Observable<ProfileResponse>;
+
+      abstract changePassword(newPassword: string, currentPassword?: string): Observable<ProfileResponse>;
+
+      abstract logout(): void;
 }
 
