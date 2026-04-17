@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {DocService} from "../../../core/services/doc.service";
-import {UploadService} from "../../../core/services/upload.service";
+import {FileService} from "../../../core/services/file.service";
 import {RouterOutlet} from "@angular/router";
 
 @Component({
@@ -8,7 +8,7 @@ import {RouterOutlet} from "@angular/router";
       imports: [
             RouterOutlet
       ],
-      providers: [DocService, UploadService],
+      providers: [DocService, FileService],
       templateUrl: './doc-dashboard.component.html',
       styleUrl: './doc-dashboard.component.scss',
 })

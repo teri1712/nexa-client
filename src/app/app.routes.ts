@@ -35,7 +35,7 @@ export const routes: Routes = [
                     import('./features/profile/profile').then(m => m.ProfileComponent),
       },
       {
-            path: 'docs/dashboard',
+            path: 'docs',
             canActivate: [authGuard],
             loadComponent: () => import('./features/docs/dashboard/doc-dashboard.component').then(m => m.DocDashboardComponent),
             loadChildren: () => import('./features/docs/doc.routes').then(m => m.docRoutes)

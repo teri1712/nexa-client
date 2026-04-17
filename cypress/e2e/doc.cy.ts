@@ -35,4 +35,18 @@ describe('Doc management', () => {
             cy.contains('button', 'Search').click();
             cy.contains('Query is required').should('be.visible');
       });
+      it('should display document detail when user click view doc', () => {
+
+            cy.fixture('doc-detail-success').then(data => {
+                  cy.intercept('GET', '**/docs/doc_001', {statusCode: 200, body: data, delay: 1000})
+            })
+
+            cy.visit('/docs/dashboard');
+            cy.get('#search-input').type('test');
+            cy.contains('button', 'Search').click();
+            cy.get('[data-doc-id="doc_001"]').click()
+            cy.url().should('include', '/docs/doc_001')
+
+            cy.contains('Angular Developer Guide').should('be.visible');
+      });
 })

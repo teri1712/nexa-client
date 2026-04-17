@@ -1,5 +1,6 @@
-<mat-card class="add-doc-card">
+<mat-card appearance="outlined" class="add-doc-card">
   <mat-card-header>
+    <mat-icon mat-card-avatar>upload_file</mat-icon>
     <mat-card-title>Add New Document</mat-card-title>
   </mat-card-header>
   <mat-card-content>
@@ -7,7 +8,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Title</mat-label>
-        <input matInput id="title" formControlName="title" placeholder="Document title" />
+        <input matInput id="title" formControlName="title" placeholder="Document title"/>
         @if (form.controls.title.invalid && form.controls.title.touched) {
           <mat-error>Title is required</mat-error>
         }
@@ -15,7 +16,8 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
-        <textarea matInput id="description" formControlName="description" rows="3" placeholder="Document description"></textarea>
+        <textarea matInput id="description" formControlName="description" rows="3"
+                  placeholder="Document description"></textarea>
         @if (form.controls.description.invalid && form.controls.description.touched) {
           <mat-error>Description is required</mat-error>
         }
@@ -32,16 +34,25 @@
         }
       </mat-form-field>
 
-      <div class="file-input-wrapper">
-        <label for="file-input">File</label>
-        <input type="file" id="file-input" (change)="onFileChange($event)" accept=".pdf,.docx" />
+      <!-- File picker using Material button -->
+      <div class="file-picker">
+        <input #fileInput type="file" id="file-input" hidden (change)="onFileChange($event)" accept=".pdf,.docx"/>
+        <button type="button" mat-stroked-button (click)="fileInput.click()">
+          <mat-icon>attach_file</mat-icon>
+          {{ form.value.file ? form.value.file.name : 'Choose file…' }}
+        </button>
         @if (form.controls.file.invalid && form.controls.file.touched) {
           <mat-error>File is required</mat-error>
         }
       </div>
 
       <button mat-flat-button color="primary" type="submit" id="submit-btn" [disabled]="submitting()">
-        {{ submitting() ? 'Uploading...' : 'Upload Document' }}
+        @if (submitting()) {
+          <mat-spinner diameter="18"></mat-spinner>
+        } @else {
+          <mat-icon>cloud_upload</mat-icon>
+        }
+        {{ submitting() ? 'Uploading…' : 'Upload Document' }}
       </button>
 
     </form>

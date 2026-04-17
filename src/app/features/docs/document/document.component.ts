@@ -1,39 +1,53 @@
 import {Component, inject, signal} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {rxResource} from '@angular/core/rxjs-interop';
 import {DocService} from '../../../core/services/doc.service';
+import {FileService} from '../../../core/services/file.service';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
 import {DatePipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
-import {RouterLink} from '@angular/router';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
   selector: 'app-document',
-  imports: [MatCardModule, MatChipsModule, DatePipe, MatButtonModule, RouterLink],
-  templateUrl: './document.component.html',
-  styleUrl: './document.component.scss',
+  standalone: true,
+  imports: [MatCardModule, MatChipsModule, DatePipe, MatButtonModule, RouterLink, MatProgressSpinner, MatIconModule, MatDividerModule],
+      templateUrl: './document.component.html',
+      styleUrl: './document.component.scss',
 })
 export class DocumentComponent {
-  route = inject(ActivatedRoute)
-  docService = inject(DocService)
+      private readonly route = inject(ActivatedRoute);
+      private readonly docService = inject(DocService);
+      private readonly fileService = inject(FileService);
 
-  id = signal<string>('')
-  doc = rxResource(
-    {
-      params: () => ({id: this.id()}),
-      stream: (request) => {
-        const id = request.params.id
-        return this.docService.find(id)
-      }
-    }
-  )
+      readonly id = signal<string>('');
+      downloading = signal(false);
 
-  constructor() {
-    this.route.paramMap.subscribe(params => {
-        const id = params.get('id')
-        if (id) this.id.set(id)
+      doc = rxResource({
+            params: () => ({id: this.id()}),
+            stream: (request) => this.docService.find(request.params.id),
+      });
+
+      constructor() {
+            this.route.paramMap.subscribe(params => {
+                  const id = params.get('id');
+                  if (id) this.id.set(id);
+            });
       }
-    )
-  }
+
+      onDownload() {
+            const d = this.doc.value();
+            if (!d?.fileKey || this.downloading()) return;
+            this.downloading.set(true);
+            this.fileService.download(d.fileKey).subscribe({
+                  next: (res) => {
+                        window.open(res.path, '_blank');
+                  },
+                  error: (err) => console.error(err),
+                  complete: () => this.downloading.set(false),
+            });
+      }
 }

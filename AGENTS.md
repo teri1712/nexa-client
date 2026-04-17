@@ -19,7 +19,7 @@ code.
 
 # Decision
 
-- Prefer angular material components over hard coding styles
+- Prefer angular material components and design over hard coding styles
 
 # Rules
 

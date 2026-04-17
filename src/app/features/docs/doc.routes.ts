@@ -1,11 +1,10 @@
 import {Routes} from '@angular/router';
-import {SearchComponent} from './search/search.component';
 import {adminGuard} from '../../core/guards/admin.guard';
 
 export const docRoutes: Routes = [
       {
-            path: '',
-            component: SearchComponent,
+            path: 'dashboard',
+            loadComponent: () => import('./search/search.component').then(m => m.SearchComponent),
       },
       {
             path: 'new',

@@ -1,0 +1,22 @@
+.add-doc-card { max-width: 560px; margin: 24px auto; }
+
+.add-doc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.file-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+#submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
