@@ -1,7 +1,5 @@
-1. Feature: Doc Search, I want this page mimic google search
-
-- Suggestions are AI generated response, please mimic the google search one that display a container loading results and
-  loading progress exactly like google saerch (currently i just added <mat-spinner id="suggestion-spinner" diameter="
-  20"></mat-spinner>, please modify it but with the same id)
-- Please layout doc dashboard and its component nicely, search page mimic google search style
-- For loading status, I prefer to use a spinner intead of text
+1. I need 1 color for NexaSearch text
+2. why the hell height of search bar line so big?
+3. AI Overview not in the side but appear at under the search bar like google
+4. I need compact UI
+5. I need color for doc items follow angular material themes, not like google

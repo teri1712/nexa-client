@@ -2,10 +2,10 @@
 
   <!-- Hero / Search Bar -->
   <div class="search-hero">
-    <h1 class="search-logo">Nexa<span>Search</span></h1>
+    <h1 class="search-logo">NexaSearch</h1>
 
     <div class="search-bar-wrapper">
-      <mat-form-field appearance="outline" class="search-field" floatLabel="always" subscriptSizing="dynamic">
+      <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
         <mat-icon matPrefix>search</mat-icon>
         <input matInput id="search-input" [formControl]="queryString"
                (keyup.enter)="onQueryButtonClick()" placeholder="Search documents…"/>
@@ -18,97 +18,95 @@
           <mat-error>Query is required</mat-error>
         }
       </mat-form-field>
-      <button mat-flat-button color="primary" class="search-btn" (click)="onQueryButtonClick()">Search</button>
-    </div>
 
-    <!-- Filters -->
-    <div class="search-filters">
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
-        <mat-label>File type</mat-label>
+        <mat-label>Type</mat-label>
         <mat-select id="type-select" [ngModel]="type()" (ngModelChange)="type.set($event)">
           <mat-option value="">All</mat-option>
           <mat-option value="PDF">PDF</mat-option>
           <mat-option value="DOCX">DOCX</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <button mat-flat-button color="primary" class="search-btn" (click)="onQueryButtonClick()">Search</button>
     </div>
   </div>
 
-  <!-- Results + Suggestion layout -->
-  @if (results.isLoading() || results.value() || results.error()) {
+  <!-- Content below search bar -->
+  @if (results.isLoading() || results.value() || results.error() || suggestions.isLoading() || suggestions.value()) {
     <div class="results-layout">
 
-      <!-- Left: Doc results -->
-      <div class="results-column">
+      <!-- AI Overview (full width, above results, like Google) -->
+      @if (suggestions.isLoading() || suggestions.value()) {
+        <mat-card class="suggestion-panel" appearance="outlined">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>auto_awesome</mat-icon>
+            <mat-card-title>AI Overview</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (suggestions.isLoading()) {
+              <div id="suggestion-spinner" class="suggestion-loading">
+                <div class="suggestion-skeleton">
+                  <div class="skeleton-line wide"></div>
+                  <div class="skeleton-line medium"></div>
+                  <div class="skeleton-line wide"></div>
+                  <div class="skeleton-line short"></div>
+                </div>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
+            } @else if (suggestions.value(); as suggestion) {
+              <p id="suggestion-box" class="suggestion-text">{{ suggestion }}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
 
-        @if (results.isLoading()) {
-          <div class="results-skeleton" id="search-spinner">
-            @for (i of [1,2,3]; track i) {
-              <div class="skeleton-card">
-                <div class="skeleton-line wide"></div>
-                <div class="skeleton-line medium"></div>
-                <div class="skeleton-line short"></div>
+      <!-- Doc results -->
+      @if (results.isLoading()) {
+        <div class="results-skeleton" id="search-spinner">
+          @for (i of [1,2,3]; track i) {
+            <div class="skeleton-card">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line wide"></div>
+              <div class="skeleton-line medium"></div>
+            </div>
+          }
+        </div>
+      }
+
+      @if (results.error()) {
+        <p class="status-text error">Failed to load results.</p>
+      }
+
+      @if (results.value(); as page) {
+        @if (page.docs.length === 0) {
+          <p class="status-text" id="no-results">No documents found.</p>
+        } @else {
+          <p class="result-count">About {{ page.totalPages }} page(s)</p>
+          <div id="results-list" class="results-list">
+            @for (doc of page.docs; track doc.id) {
+              <div class="doc-result" [attr.data-doc-id]="doc.id" [routerLink]="['/docs', doc.id]" matRipple>
+                <div class="doc-result-top">
+                  <mat-icon class="doc-icon">insert_drive_file</mat-icon>
+                  <span class="doc-source">nexa › documents</span>
+                </div>
+                <h3 class="doc-title">{{ doc.title }}</h3>
+                <div class="doc-meta">
+                  <span class="doc-filename">{{ doc.filename }}</span>
+                  <span class="doc-sep">·</span>
+                  <span class="doc-type">{{ doc.fileType }}</span>
+                  <span class="doc-sep">·</span>
+                  <span class="doc-date">{{ doc.createdAt | date:'mediumDate' }}</span>
+                </div>
               </div>
             }
           </div>
+
+          <div class="pagination">
+            <button mat-stroked-button id="next-page-btn" (click)="onNextPage()">Next page</button>
+          </div>
         }
-
-        @if (results.error()) {
-          <p class="status-text error">Failed to load results.</p>
-        }
-
-        @if (results.value(); as page) {
-          @if (page.docs.length === 0) {
-            <p class="status-text" id="no-results">No documents found.</p>
-          } @else {
-            <p class="result-count mat-body-small">About {{ page.totalPages }} page(s)</p>
-            <mat-list id="results-list">
-              @for (doc of page.docs; track doc.id) {
-                <mat-list-item class="doc-result" [attr.data-doc-id]="doc.id" [routerLink]="['/docs', doc.id]" matRipple>
-                  <span matListItemTitle class="doc-title">{{ doc.title }}</span>
-                  <span matListItemLine class="doc-filename">{{ doc.filename }}</span>
-                  <span matListItemLine class="doc-date">{{ doc.createdAt | date:'mediumDate' }}</span>
-                  <div matListItemMeta>
-                    <mat-chip-set>
-                      <mat-chip color="primary" highlighted>{{ doc.fileType }}</mat-chip>
-                    </mat-chip-set>
-                  </div>
-                </mat-list-item>
-              }
-            </mat-list>
-
-            <div class="pagination">
-              <button mat-stroked-button id="next-page-btn" (click)="onNextPage()">Next</button>
-            </div>
-          }
-        }
-      </div>
-
-      <!-- Right: AI Suggestion panel -->
-      <mat-card class="suggestion-panel" appearance="outlined">
-        <mat-card-header>
-          <mat-icon mat-card-avatar color="accent">auto_awesome</mat-icon>
-          <mat-card-title>AI Overview</mat-card-title>
-        </mat-card-header>
-
-        <mat-card-content>
-          @if (suggestions.isLoading()) {
-            <div id="suggestion-spinner" class="suggestion-loading">
-              <div class="suggestion-skeleton">
-                <div class="skeleton-line wide"></div>
-                <div class="skeleton-line medium"></div>
-                <div class="skeleton-line wide"></div>
-                <div class="skeleton-line short"></div>
-              </div>
-              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </div>
-          } @else if (suggestions.value(); as suggestion) {
-            <div id="suggestion-box">
-              <p class="mat-body-medium">{{ suggestion }}</p>
-            </div>
-          }
-        </mat-card-content>
-      </mat-card>
+      }
 
     </div>
   }

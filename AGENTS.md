@@ -48,6 +48,7 @@ code.
 - Prefer humnan readable texts in html template, so that not only user can easily understand the content, but i
   can easily access them in my cyrpess test using human readible text instead of technical selectors like css
   selectors (of course it is not mandatory, and it sometimes is not possible to do so)
+- Prefer compact UI
 
 # Coding style
 
