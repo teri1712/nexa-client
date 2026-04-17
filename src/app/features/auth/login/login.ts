@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, effect, inject, NgZone, OnDestroy, OnInit, signal,} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, inject, NgZone, OnDestroy, OnInit, signal,} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -13,6 +13,7 @@ import {ITokenStore} from '../../../core/models/token-store.interface';
 import {ProblemDetail} from '../../../core/models/auth.models';
 import {environment} from '../../../../environments/environment';
 import {timer} from "rxjs";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
       selector: 'app-login',
@@ -45,20 +46,26 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
             username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
             password: ['', [Validators.required]],
       });
-      private viewReady = signal(false);
-      private googleButtonReady = computed(() => this.viewReady() && !this.showAdminForm());
 
-      constructor() {
-            effect(() => {
-                  if (this.googleButtonReady()) {
-                        this.waitForGoogleScript();
-                  }
-            });
-      }
-
+      private googleButtonSeed = false;
+      private destroyRef = inject(DestroyRef);
 
       ngAfterViewInit(): void {
-            this.viewReady.set(true);
+            this.googleButtonSeed = true;
+            timer(0, 200)
+                    .pipe(
+                            takeUntilDestroyed(this.destroyRef),
+                    )
+                    .subscribe(() => {
+                          if (this.googleButtonSeed) {
+                                if (!!(window as any).google) {
+                                      this.googleScriptReady.set(true);
+                                      this.initGoogleSignIn();
+                                      return;
+                                }
+                                this.googleButtonSeed = false;
+                          }
+                    })
       }
 
       ngOnInit(): void {
@@ -70,17 +77,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       ngOnDestroy(): void {
       }
 
-      private waitForGoogleScript(retries = 20): void {
-            if (!!(window as any).google) {
-                  this.googleScriptReady.set(true);
-                  this.initGoogleSignIn();
-                  return;
-            }
-            if (retries > 0) {
-                  timer(300).subscribe(() =>
-                          this.waitForGoogleScript(retries - 1));
-            }
-      }
 
       private initGoogleSignIn(): void {
             const g = (window as any).google;
@@ -120,6 +116,9 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
       protected toggleAdminForm(): void {
             this.showAdminForm.update(v => !v);
+            if (!this.showAdminForm()) {
+                  this.googleButtonSeed = true;
+            }
             this.errorMessage.set(null);
             this.adminForm.reset();
       }
