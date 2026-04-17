@@ -1,1 +1,27 @@
-<p>document works!</p>
+<div class="document-page">
+    <button mat-button routerLink="/docs" id="back-btn">← Back to Search</button>
+
+    @if (doc.isLoading()) {
+        <p>Loading...</p>
+    }
+
+    @if (doc.error()) {
+        <p class="error" id="doc-error">Document not found.</p>
+    }
+
+    @if (doc.value(); as d) {
+        <mat-card class="doc-detail" id="doc-detail">
+            <mat-card-header>
+                <mat-card-title id="doc-title">{{ d.title }}</mat-card-title>
+                <mat-card-subtitle id="doc-filename">{{ d.filename }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p id="doc-description">{{ d.description }}</p>
+                <mat-chip-set>
+                    <mat-chip id="doc-type">{{ d.fileType }}</mat-chip>
+                </mat-chip-set>
+                <p class="created-at">Created: <span id="doc-created-at">{{ d.createdAt | date:'medium' }}</span></p>
+            </mat-card-content>
+        </mat-card>
+    }
+</div>

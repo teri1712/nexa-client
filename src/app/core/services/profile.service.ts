@@ -5,7 +5,7 @@ import {environment} from '../../../environments/environment';
 import {ProfileRequest, ProfileResponse} from '../models/auth.models';
 import {TokenStore} from './token-store.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class ProfileService {
       private readonly http = inject(HttpClient);
       private readonly tokenService = inject(TokenStore);

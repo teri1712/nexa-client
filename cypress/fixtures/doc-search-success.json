@@ -1,0 +1,45 @@
+{
+  "totalPages": 5,
+  "docs": [
+    {
+      "id": "doc_001",
+      "filename": "financial_report_q1_2025.pdf",
+      "title": "Financial Report Q1 2025",
+      "fileType": "PDF",
+      "createdAt": "2025-01-15T10:23:45Z",
+      "score": 0.92
+    },
+    {
+      "id": "doc_002",
+      "filename": "employee_handbook.docx",
+      "title": "Employee Handbook",
+      "fileType": "DOCX",
+      "createdAt": "2024-12-01T08:00:00Z",
+      "score": 0.87
+    },
+    {
+      "id": "doc_003",
+      "filename": "project_alpha_spec.pdf",
+      "title": "Project Alpha Specification",
+      "fileType": "PDF",
+      "createdAt": "2025-02-10T14:12:30Z",
+      "score": 0.95
+    },
+    {
+      "id": "doc_004",
+      "filename": "meeting_notes_2025_03_01.docx",
+      "title": "Meeting Notes - March 1, 2025",
+      "fileType": "DOCX",
+      "createdAt": "2025-03-01T16:45:00Z",
+      "score": 0.78
+    },
+    {
+      "id": "doc_005",
+      "filename": "api_design_guidelines.pdf",
+      "title": "API Design Guidelines",
+      "fileType": "PDF",
+      "createdAt": "2025-01-20T11:05:10Z",
+      "score": 0.89
+    }
+  ]
+}

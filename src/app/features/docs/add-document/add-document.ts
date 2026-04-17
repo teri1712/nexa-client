@@ -2,13 +2,18 @@ import {Component, inject, signal} from '@angular/core';
 import {DocService} from '../../../core/services/doc.service';
 import {UploadService} from '../../../core/services/upload.service';
 import {DocType} from '../../../core/models/doc.models';
-import {NonNullableFormBuilder, Validators} from '@angular/forms';
+import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {switchMap} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-add-document',
-  imports: [],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatCardModule],
   templateUrl: './add-document.html',
   styleUrl: './add-document.scss',
 })
@@ -25,6 +30,7 @@ export class AddDocument {
     type: [null as DocType | null, Validators.required],
   });
   submitting = signal(false);
+  readonly DocType = DocType;
 
   onFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
