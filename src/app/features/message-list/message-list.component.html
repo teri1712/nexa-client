@@ -1,0 +1,41 @@
+<div class="chat-container">
+  <div class="messages-area" #messagesArea>
+    @if (loading()) {
+      <div class="load-more-spinner">
+        <mat-progress-spinner mode="indeterminate" diameter="24"/>
+      </div>
+    }
+    @for (msg of displayMessages(); track msg.sequenceNumber) {
+      <app-message [message]="msg"/>
+      @if (isSendingMessage(msg) && msg.status === 'error') {
+        <div class="error-row">
+          <span class="error-text">Failed to send</span>
+          <button mat-button color="warn" (click)="onRetryErrorMessage()">Retry</button>
+        </div>
+      }
+      @if (isSendingMessage(msg) && msg.status === 'sending') {
+        <div class="sending-indicator">
+          <mat-progress-spinner mode="indeterminate" diameter="16"/>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="input-area">
+    <mat-form-field appearance="outline" class="message-input">
+      <textarea matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="4"
+                placeholder="Type a message..."
+                [value]="message()"
+                (input)="message.set($any($event.target).value)"
+                (keydown.enter)="$event.preventDefault(); onSendClicked()"
+                id="message-input">
+      </textarea>
+    </mat-form-field>
+    <button mat-fab extended color="primary" (click)="onSendClicked()" id="send-btn">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

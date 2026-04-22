@@ -4,12 +4,14 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {ITokenStore} from './core/models/token-store.interface';
 import {IAuthService} from './core/models/auth-service.interface';
+import {BotBubbleComponent} from './features/agent-bubble/bot-bubble.component';
 
 @Component({
       selector: 'app-root',
-      imports: [RouterOutlet, RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatIconModule],
+      imports: [RouterOutlet, RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, BotBubbleComponent],
       templateUrl: './app.html',
       styleUrl: './app.scss',
 })

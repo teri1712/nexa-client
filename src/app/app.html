@@ -1,39 +1,47 @@
 <div class="app-shell">
-  @if (tokenService.isLoggedIn()) {
-    <mat-toolbar class="navbar">
-      <a mat-button routerLink="/" class="brand-btn">
-        <span class="brand-icon">N</span>
-        <span class="brand-name">Nexa</span>
-      </a>
+    @if (tokenService.isLoggedIn()) {
+        <mat-toolbar class="navbar">
+            <a mat-button routerLink="/" class="brand-btn">
+                <span class="brand-icon">N</span>
+                <span class="brand-name">Nexa</span>
+            </a>
 
-      <a mat-button routerLink="/" routerLinkActive="nav-active"
-         [routerLinkActiveOptions]="{ exact: true }">
-        Home
-      </a>
-      <a mat-button routerLink="/profile" routerLinkActive="nav-active">
-        Profile
-      </a>
-      @if (tokenService.isAdmin()) {
-        <a mat-button routerLink="/auth/register-admin" routerLinkActive="nav-active">
-          Register Admin
-        </a>
-      }
+            <a mat-button routerLink="/" routerLinkActive="nav-active"
+               [routerLinkActiveOptions]="{ exact: true }">
+                Home
+            </a>
+            <a mat-button routerLink="/profile" routerLinkActive="nav-active">
+                Profile
+            </a>
+            @if (tokenService.isAdmin()) {
+                <a mat-button routerLink="/auth/register-admin" routerLinkActive="nav-active">
+                    Register Admin
+                </a>
+            }
 
-      <span class="spacer"></span>
+            <span class="spacer"></span>
 
-      <span class="nav-user">{{ tokenService.profile()?.name }}</span>
-      <button mat-stroked-button (click)="authService.logout()">
-        <mat-icon>logout</mat-icon>
-        Sign out
-      </button>
-    </mat-toolbar>
-  }
+            <span class="nav-user">{{ tokenService.profile()?.name }}</span>
+            <button mat-stroked-button (click)="authService.logout()">
+                <mat-icon>logout</mat-icon>
+                Sign out
+            </button>
+        </mat-toolbar>
+    }
 
-  <main class="main-content">
-    <router-outlet />
-  </main>
+    <mat-sidenav-container class="main-container">
+        <mat-sidenav-content>
+            <router-outlet/>
+        </mat-sidenav-content>
+
+        <mat-sidenav #chatSidenav position="end" mode="side" class="chat-sidenav">
+            <router-outlet name="right"
+                           (activate)="chatSidenav.open()"
+                           (deactivate)="chatSidenav.close()"/>
+        </mat-sidenav>
+    </mat-sidenav-container>
+
+    @if (tokenService.isLoggedIn()) {
+        <app-bot-bubble/>
+    }
 </div>
-
-
-
-

@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.load-more-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+}
+
+.sending-indicator {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 16px 4px;
+}
+
+.error-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 12px;
+  gap: 4px;
+}
+
+.error-text {
+  color: var(--mat-sys-error);
+  font-size: 0.8rem;
+}
+
+.input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.message-input {
+  flex: 1;
+}
+

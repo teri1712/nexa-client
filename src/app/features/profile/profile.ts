@@ -31,7 +31,6 @@ type Tab = 'profile' | 'security';
             MatChipsModule,
             MatIconModule,
       ],
-      providers: [ProfileService],
       templateUrl: './profile.html',
       styleUrl: './profile.scss',
 })
