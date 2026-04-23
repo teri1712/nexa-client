@@ -4,19 +4,19 @@ import {Message} from "../models/message.models";
 
 
 export interface MessageAccepted {
-      userMessage: Message;
-      placeholderMessage: Message;
+    userMessage: Message;
+    placeholderMessage: Message;
 }
 
 @Injectable()
 export class MessageService {
-      private readonly http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
 
-      send(message: string) {
-            return this.http.post<MessageAccepted>(`/messages`, {message: message});
-      }
+    send(message: string) {
+        return this.http.post<MessageAccepted>(`/messages`, {message: message});
+    }
 
-      list(anchor?: Message) {
-            return this.http.get<Message[]>(`/messages?anchorSeq=${anchor?.sequenceNumber}`);
-      }
+    list(anchor?: Message) {
+        return this.http.get<Message[]>(`/messages?anchorSeq=${anchor?.sequenceNumber ?? Number.MAX_SAFE_INTEGER}`);
+    }
 }

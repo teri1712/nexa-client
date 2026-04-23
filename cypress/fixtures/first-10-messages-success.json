@@ -1,0 +1,62 @@
+[
+  {
+    "sequenceNumber": 10,
+    "content": "Great, see you then!",
+    "createdAt": "2026-04-23T09:08:45Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 9,
+    "content": "Works for me 👍",
+    "createdAt": "2026-04-23T09:08:00Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 8,
+    "content": "How about 3 PM?",
+    "createdAt": "2026-04-23T09:07:25Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 7,
+    "content": "Perfect, what time?",
+    "createdAt": "2026-04-23T09:06:40Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 6,
+    "content": "There’s a nice café nearby.",
+    "createdAt": "2026-04-23T09:05:15Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 5,
+    "content": "Maybe somewhere near the office.",
+    "createdAt": "2026-04-23T09:04:20Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 4,
+    "content": "Sounds good. Where?",
+    "createdAt": "2026-04-23T09:03:05Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 3,
+    "content": "Thinking of grabbing coffee.",
+    "createdAt": "2026-04-23T09:02:30Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 2,
+    "content": "Yeah, what’s up?",
+    "createdAt": "2026-04-23T09:01:10Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 1,
+    "content": "Hey, are you free later?",
+    "createdAt": "2026-04-23T09:00:00Z",
+    "mine": true
+  }
+]

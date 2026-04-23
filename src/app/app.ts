@@ -1,4 +1,4 @@
-import {Component, effect, inject} from '@angular/core';
+import {Component, effect, inject, signal} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,6 +19,7 @@ export class App {
       protected readonly tokenService = inject(ITokenStore);
       protected readonly authService = inject(IAuthService);
       private readonly snackBar = inject(MatSnackBar);
+      protected readonly chatOpen = signal(false);
 
       constructor() {
             effect(() => {

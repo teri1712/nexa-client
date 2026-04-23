@@ -26,7 +26,9 @@ Implement UI for messaging feature. Use components prepared by user.
 - `mat-button` for send / retry actions
 - `mat-icon` for icons
 
-## Feedback
-User reminded: "Prefer angular material components and design over hard coding styles"
-→ Replaced plain flex right-panel with `mat-sidenav`, removed hardcoded `background: white`
+## Feedback resolution (2026-04-22)
+
+1. **CDK virtual scroll** → Replaced `.messages-area` div with `cdk-virtual-scroll-viewport` + `*cdkVirtualFor`, `itemSize="72"`, `trackBy: trackBySeq`
+2. **Auto-scroll** → Kept user's modification (only scroll on sending), replaced `setTimeout` with `timer(200)` (RxJS), use `viewport.scrollToIndex()` instead of raw DOM
+3. **Scroll-to-top pagination** → `(scrolledIndexChange)` → calls `onScrollChangeToFirstElement()` when index === 0
 

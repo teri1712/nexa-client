@@ -10,6 +10,10 @@
                [routerLinkActiveOptions]="{ exact: true }">
                 Home
             </a>
+            <a mat-button routerLink="/docs/dashboard" routerLinkActive="nav-active"
+               [routerLinkActiveOptions]="{ exact: true }">
+                Search
+            </a>
             <a mat-button routerLink="/profile" routerLinkActive="nav-active">
                 Profile
             </a>
@@ -36,12 +40,12 @@
 
         <mat-sidenav #chatSidenav position="end" mode="side" class="chat-sidenav">
             <router-outlet name="right"
-                           (activate)="chatSidenav.open()"
-                           (deactivate)="chatSidenav.close()"/>
+                           (activate)="chatSidenav.open(); chatOpen.set(true)"
+                           (deactivate)="chatSidenav.close(); chatOpen.set(false)"/>
         </mat-sidenav>
     </mat-sidenav-container>
 
-    @if (tokenService.isLoggedIn()) {
+    @if (tokenService.isLoggedIn() && !chatOpen()) {
         <app-bot-bubble/>
     }
 </div>
