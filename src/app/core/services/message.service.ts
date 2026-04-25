@@ -1,11 +1,12 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Message} from "../models/message.models";
+import {environment} from "../../../environments/environment";
 
 
 export interface MessageAccepted {
     userMessage: Message;
-    placeholderMessage: Message;
+    placeHolderMessage: Message;
 }
 
 @Injectable()
@@ -13,10 +14,15 @@ export class MessageService {
     private readonly http = inject(HttpClient);
 
     send(message: string) {
-        return this.http.post<MessageAccepted>(`/messages`, {message: message});
+        const params = new HttpParams().set('message', message);
+        return this.http.post<MessageAccepted>(environment.apiUrl + `/messages`, params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
     }
 
     list(anchor?: Message) {
-        return this.http.get<Message[]>(`/messages?anchorSeq=${anchor?.sequenceNumber ?? Number.MAX_SAFE_INTEGER}`);
+        return this.http.get<Message[]>(environment.apiUrl + `/messages?anchorSeq=${anchor?.sequenceNumber ?? Number.MAX_SAFE_INTEGER}`);
     }
 }

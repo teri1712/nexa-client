@@ -12,42 +12,43 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
-  selector: 'app-document',
-  standalone: true,
-  imports: [MatCardModule, MatChipsModule, DatePipe, MatButtonModule, RouterLink, MatProgressSpinner, MatIconModule, MatDividerModule],
-      templateUrl: './document.component.html',
-      styleUrl: './document.component.scss',
+    selector: 'app-document',
+    standalone: true,
+    imports: [MatCardModule, MatChipsModule, DatePipe, MatButtonModule, RouterLink, MatProgressSpinner, MatIconModule, MatDividerModule],
+    templateUrl: './document.component.html',
+    styleUrl: './document.component.scss',
 })
 export class DocumentComponent {
-      private readonly route = inject(ActivatedRoute);
-      private readonly docService = inject(DocService);
-      private readonly fileService = inject(FileService);
+    private readonly route = inject(ActivatedRoute);
+    private readonly docService = inject(DocService);
+    private readonly fileService = inject(FileService);
 
-      readonly id = signal<string>('');
-      downloading = signal(false);
+    readonly id = signal<string>('');
+    downloading = signal(false);
 
-      doc = rxResource({
-            params: () => ({id: this.id()}),
-            stream: (request) => this.docService.find(request.params.id),
-      });
+    doc = rxResource({
+        params: () => ({id: this.id()}),
+        stream: (request) => this.docService.find(request.params.id),
+    });
 
-      constructor() {
-            this.route.paramMap.subscribe(params => {
-                  const id = params.get('id');
-                  if (id) this.id.set(id);
-            });
-      }
+    constructor() {
+        this.route.paramMap.subscribe(params => {
+            const id = params.get('id');
+            if (id) this.id.set(id);
+        });
+    }
 
-      onDownload() {
-            const d = this.doc.value();
-            if (!d?.fileKey || this.downloading()) return;
-            this.downloading.set(true);
-            this.fileService.download(d.fileKey).subscribe({
-                  next: (res) => {
-                        window.open(res.path, '_blank');
-                  },
-                  error: (err) => console.error(err),
-                  complete: () => this.downloading.set(false),
-            });
-      }
+    onDownload() {
+        const d = this.doc.value();
+        if (!d?.fileKey || this.downloading()) return;
+        this.downloading.set(true);
+        this.fileService.download(d.fileKey).subscribe({
+            next: (res) => {
+                console.log(res)
+                window.open(res.presignedDownloadUrl, '_blank');
+            },
+            error: (err) => console.error(err),
+            complete: () => this.downloading.set(false),
+        });
+    }
 }

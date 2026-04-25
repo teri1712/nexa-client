@@ -91,7 +91,8 @@
                                 <mat-icon matListItemIcon color="primary">insert_drive_file</mat-icon>
                                 <span matListItemTitle>{{ doc.title }}</span>
                                 <span matListItemLine>{{ doc.filename }}</span>
-                                <span matListItemLine>{{ doc.fileType }} · {{ doc.createdAt | date:'mediumDate' }}</span>
+                                <span matListItemLine>{{ doc.fileType }}
+                                    · {{ doc.createdAt | date:'mediumDate' }}</span>
                             </a>
                         }
                     </mat-nav-list>
@@ -106,3 +107,8 @@
     }
 
 </div>
+
+<a mat-fab routerLink="/docs/new" class="add-doc-fab">
+    <mat-icon>add</mat-icon>
+</a>
+

@@ -72,12 +72,13 @@ export class MessageListComponent implements OnInit {
                     .subscribe({
                         next: messages => {
                             this.messages.set(messages.concat(snapshot));
-                            this.end.set(messages.length === 0)
+                            if (messages.length === 0) this.end.set(true)
                             if (snapshot.length === 0) this.scrollToBottom()
                         },
                         error: (err) => {
                             console.error(err)
                             this.loadingTrigger.set(false)
+                            this.end.set(true)
                         },
                         complete: () => {
                             this.loadingTrigger.set(false);
@@ -103,6 +104,9 @@ export class MessageListComponent implements OnInit {
                             this.placeholderMessage.set(undefined);
                             this.prepend(reply)
                         },
+                        error: (err) => {
+                            console.error(err)
+                        }
                     });
                 onCleanup(() => sub.unsubscribe());
             }
@@ -125,7 +129,7 @@ export class MessageListComponent implements OnInit {
 
         effect((onCleanup) => {
             const sending = this.sendingMessage();
-            if (sending) {
+            if (sending?.status === 'sending') {
                 const message = sending.content
                 const sub = this.messageService.send(message)
                     .subscribe({
@@ -134,9 +138,10 @@ export class MessageListComponent implements OnInit {
                             this.prepend(sent)
 
                             this.sendingMessage.set(undefined);
-                            this.placeholderMessage.set(res.placeholderMessage)
+                            this.placeholderMessage.set(res.placeHolderMessage)
                         },
-                        error: () => {
+                        error: (err) => {
+                            console.error(err)
                             this.sendingMessage.set({...sending, status: 'error'});
                         },
                     });

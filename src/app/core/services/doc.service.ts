@@ -5,23 +5,23 @@ import {Observable} from 'rxjs';
 import {environment} from "../../../environments/environment";
 
 export interface CreateDocumentRequest {
-      filename: string;
-      eTag: string;
-      fileKey: string;
-      title: string;
-      description: string;
-      type: DocType;
+    filename: string;
+    eTag: string;
+    fileKey: string;
+    title: string;
+    description: string;
+    type: DocType;
 }
 
 @Injectable()
 export class DocService {
-      http = inject(HttpClient);
+    http = inject(HttpClient);
 
-      add(data: CreateDocumentRequest) {
-            return this.http.post(environment.apiUrl + '/docs', data);
-      }
+    add(data: CreateDocumentRequest) {
+        return this.http.post<Doc>(environment.apiUrl + '/docs', data);
+    }
 
-      find(id: string): Observable<Doc> {
-            return this.http.get<Doc>(environment.apiUrl + `/docs/${id}`);
-      }
+    find(id: string): Observable<Doc> {
+        return this.http.get<Doc>(environment.apiUrl + `/docs/${id}`);
+    }
 }

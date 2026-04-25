@@ -1,6 +1,16 @@
 :host {
   display: block;
-  min-height: 100vh;
+  position: relative;
+}
+
+// ...existing code...
+
+.add-doc-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: var(--mat-sys-primary);
+  z-index: 50;
 }
 
 .search-page {
@@ -121,10 +131,10 @@
   height: 12px;
   border-radius: 3px;
   background: linear-gradient(
-                  90deg,
-                  var(--mat-sys-surface-variant) 25%,
-                  var(--mat-sys-surface-container-highest) 50%,
-                  var(--mat-sys-surface-variant) 75%
+          90deg,
+          var(--mat-sys-surface-variant) 25%,
+          var(--mat-sys-surface-container-highest) 50%,
+          var(--mat-sys-surface-variant) 75%
   );
   background-size: 500px 100%;
   animation: shimmer 1.4s infinite linear;
