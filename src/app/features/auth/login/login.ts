@@ -37,10 +37,10 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly ngZone = inject(NgZone);
 
     protected readonly showAdminForm = signal(false);
-    protected readonly isGoogleLoading = signal(false);
     protected readonly isAdminLoading = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly googleScriptReady = signal(false);
+    protected readonly isGoogleLoading = signal(false);
 
     protected readonly adminForm = this.fb.group({
         username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],

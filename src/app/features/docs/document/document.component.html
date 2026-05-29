@@ -1,7 +1,7 @@
 <div class="document-page">
 
     <div class="doc-toolbar">
-        <button mat-button routerLink="/docs/dashboard" id="back-btn">
+        <button class="back-btn" routerLink="/docs/dashboard">
             <mat-icon>arrow_back</mat-icon>
             Back to Search
         </button>
@@ -10,64 +10,78 @@
     @if (doc.isLoading()) {
         <div class="loading-state">
             <mat-spinner diameter="48"></mat-spinner>
-            <p class="mat-body-medium">Loading document…</p>
+            <p>Retrieving document details...</p>
         </div>
     }
 
     @if (doc.error()) {
-        <div class="error-state">
-            <mat-icon color="warn" style="font-size:48px;width:48px;height:48px">error_outline</mat-icon>
-            <p id="doc-error" class="mat-body-large">Document not found.</p>
-            <button mat-stroked-button routerLink="/docs/dashboard">Go back</button>
+        <div class="status-card error">
+            <mat-icon>error_outline</mat-icon>
+            <h3>Document not found</h3>
+            <p>The document you are looking for might have been moved or deleted.</p>
+            <button class="custom-secondary-btn" routerLink="/docs/dashboard">Return to Dashboard</button>
         </div>
     }
 
     @if (doc.value(); as d) {
-        <mat-card appearance="outlined" id="doc-detail" class="doc-card">
-
-            <!-- Header row: icon + title + download -->
-            <mat-card-header>
-                <div mat-card-avatar class="doc-avatar">
-                    <mat-icon>description</mat-icon>
+        <div class="doc-container">
+            <div class="doc-main-card">
+                <div class="doc-header">
+                    <div class="doc-type-badge" [attr.data-type]="d.fileType">
+                        <mat-icon>{{ d.fileType === 'PDF' ? 'picture_as_pdf' : 'description' }}</mat-icon>
+                        <span>{{ d.fileType }}</span>
+                    </div>
+                    <h1 class="doc-title">{{ d.title }}</h1>
+                    <p class="doc-filename">{{ d.filename }}</p>
                 </div>
-                <mat-card-title id="doc-title">{{ d.title }}</mat-card-title>
-                <mat-card-subtitle id="doc-filename">{{ d.filename }}</mat-card-subtitle>
-            </mat-card-header>
 
-            <mat-divider></mat-divider>
+                <div class="doc-body">
+                    <div class="doc-section">
+                        <h3 class="section-label">Description</h3>
+                        <p class="doc-description">{{ d.description }}</p>
+                    </div>
 
-            <mat-card-content class="doc-content">
-                <!-- Meta chips -->
-                <mat-chip-set>
-                    <mat-chip id="doc-type">
-                        <mat-icon matChipAvatar>insert_drive_file</mat-icon>
-                        {{ d.fileType }}
-                    </mat-chip>
-                    <mat-chip>
-                        <mat-icon matChipAvatar>calendar_today</mat-icon>
-                        {{ d.createdAt | date:'mediumDate' }}
-                    </mat-chip>
-                </mat-chip-set>
+                    <div class="doc-meta-grid">
+                        <div class="meta-item">
+                            <span class="label">Uploaded On</span>
+                            <span class="value">{{ d.createdAt | date:'longDate' }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="label">Reference ID</span>
+                            <span class="value">{{ d.id }}</span>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Description -->
-                <p id="doc-description" class="doc-description">{{ d.description }}</p>
-            </mat-card-content>
+                <div class="doc-footer">
+                    <button class="custom-primary-btn download-btn" (click)="onDownload()" [disabled]="downloading()">
+                        @if (downloading()) {
+                            <mat-spinner diameter="20"></mat-spinner>
+                            <span>Preparing Download...</span>
+                        } @else {
+                            <mat-icon>download</mat-icon>
+                            <span>Download Document</span>
+                        }
+                    </button>
+                </div>
+            </div>
 
-            <mat-divider></mat-divider>
-
-            <mat-card-actions align="start">
-                <button mat-flat-button color="primary" id="download-btn"
-                        [disabled]="downloading()" (click)="onDownload()">
-                    @if (downloading()) {
-                        <mat-spinner diameter="18"></mat-spinner>
-                    } @else {
-                        <mat-icon>download</mat-icon>
-                    }
-                    Download
-                </button>
-            </mat-card-actions>
-
-        </mat-card>
+            <div class="doc-sidebar">
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Information</h3>
+                    <div class="info-list">
+                        <div class="info-row">
+                            <mat-icon>security</mat-icon>
+                            <span>Encrypted at rest</span>
+                        </div>
+                        <div class="info-row">
+                            <mat-icon>verified</mat-icon>
+                            <span>Verified Integrity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 
 </div>

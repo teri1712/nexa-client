@@ -9,6 +9,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 import {MatToolbar} from "@angular/material/toolbar";
 import {IProfileStore, ITokenStore} from "../../core/models/token-store.interface";
+import {ThemeService} from "../../core/services/theme.service";
 
 @Component({
     selector: 'app-home',
@@ -22,7 +23,16 @@ export class HomeComponent {
     private readonly authService = inject(IAuthService)
     protected readonly tokenService = inject(ITokenStore);
     protected readonly profileStore = inject(IProfileStore);
+    protected readonly themeService = inject(ThemeService);
     protected readonly chatOpen = signal(false);
+
+    getThemeIcon(mode: string): string {
+        switch (mode) {
+            case 'light': return 'light_mode';
+            case 'dark': return 'dark_mode';
+            default: return 'brightness_auto';
+        }
+    }
 
     constructor() {
         effect(() => {

@@ -1,47 +1,218 @@
-:host { display: block; }
+:host {
+  display: block;
+  min-height: calc(100dvh - 64px);
+  background: var(--mat-sys-surface-container-lowest);
+}
 
 .document-page {
-  max-width: 680px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 8px 16px 32px;
+  padding: 2rem 1.5rem;
 }
 
 .doc-toolbar {
-  margin-bottom: 12px;
+  margin-bottom: 2rem;
 }
 
-.loading-state, .error-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 48px 0;
-  text-align: center;
-}
-
-.doc-card {
-  margin-top: 4px;
-}
-
-.doc-avatar {
-  background: var(--mat-sys-primary-container);
-  color: var(--mat-sys-on-primary-container);
-  border-radius: 50%;
+.back-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--mat-sys-primary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
-.doc-content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-top: 16px !important;
+.doc-container {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.doc-main-card {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow-md);
+  overflow: hidden;
+}
+
+.doc-header {
+  padding: 2.5rem;
+  background: linear-gradient(to bottom right, var(--mat-sys-surface), var(--mat-sys-surface-container-low));
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.doc-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+
+  &[data-type="PDF"] {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  &[data-type="DOCX"] {
+    background: #dbeafe;
+    color: #2563eb;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.doc-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  letter-spacing: -1px;
+  color: var(--mat-sys-on-surface);
+}
+
+.doc-filename {
+  font-size: 1rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.doc-body {
+  padding: 2.5rem;
+}
+
+.doc-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 1rem;
 }
 
 .doc-description {
-  color: var(--mat-sys-on-surface);
+  font-size: 1.125rem;
   line-height: 1.6;
+  color: var(--mat-sys-on-surface);
   margin: 0;
+}
+
+.doc-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .label {
+    font-size: 0.75rem;
+    color: var(--mat-sys-on-surface-variant);
+    font-weight: 600;
+  }
+
+  .value {
+    font-size: 0.9375rem;
+    color: var(--mat-sys-on-surface);
+    font-weight: 500;
+  }
+}
+
+.doc-footer {
+  padding: 2rem 2.5rem;
+  background: var(--mat-sys-surface-container-lowest);
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}
+
+.download-btn {
+  min-width: 220px;
+}
+
+.doc-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar-card {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--app-radius-md);
+  padding: 1.5rem;
+}
+
+.sidebar-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.25rem;
+  color: var(--mat-sys-on-surface);
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #4ade80;
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  color: var(--mat-sys-on-surface-variant);
+  gap: 1rem;
 }

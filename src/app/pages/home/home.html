@@ -19,6 +19,10 @@
         }
         <span class="spacer"></span>
 
+        <button mat-icon-button (click)="themeService.cycleTheme()" aria-label="Toggle theme">
+            <mat-icon>{{ getThemeIcon(themeService.currentTheme()) }}</mat-icon>
+        </button>
+
         <span class="nav-user">{{ profileStore.profile()?.name }}</span>
         <button mat-stroked-button (click)="logout()">
             <mat-icon>logout</mat-icon>
