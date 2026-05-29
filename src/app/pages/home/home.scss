@@ -60,6 +60,33 @@
   }
 }
 
+.theme-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface-variant);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--app-transition-fast);
+  margin-right: 0.5rem;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-primary);
+    border-color: var(--mat-sys-primary);
+  }
+}
+
 .nav-user {
   font-size: 0.875rem;
   font-weight: 500;

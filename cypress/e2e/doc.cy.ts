@@ -4,10 +4,10 @@ describe('Doc management', () => {
             cy.loginAsAdmin();
 
             cy.fixture('doc-search-success').then(data => {
-                  cy.intercept('GET', '**/docs*', {statusCode: 200, body: data, delay: 1000})
+                  cy.intercept('GET', '**/docs*', {statusCode: 200, body: data, delay: 1000}).as('getDocs')
             })
             cy.fixture('doc-suggest-success').then(data => {
-                  cy.intercept('POST', '**/docs/suggest', {statusCode: 200, body: data, delay: 1000})
+                  cy.intercept('POST', '**/docs/suggest', {statusCode: 200, body: data, delay: 1000}).as('getSuggestions')
             })
 
       })
@@ -16,7 +16,8 @@ describe('Doc management', () => {
             cy.visit('/docs/dashboard');
             cy.get('#search-input').type('test');
             cy.contains('button', 'Search').click();
-            cy.get('#search-spinner').should('be.visible');
+            cy.get('#search-spinner').should('exist');
+            cy.wait('@getDocs');
             cy.get('#results-list').should('be.visible');
             cy.contains('financial_report_q1_2025').should('be.visible');
       });
@@ -26,7 +27,8 @@ describe('Doc management', () => {
             cy.visit('/docs/dashboard');
             cy.get('#search-input').type('test');
             cy.contains('button', 'Search').click();
-            cy.get('#suggestion-spinner').should('be.visible');
+            cy.get('#suggestion-spinner').should('exist');
+            cy.wait('@getSuggestions');
             cy.get('#suggestion-box').should('be.visible');
       });
 

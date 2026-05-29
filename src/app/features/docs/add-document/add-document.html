@@ -1,75 +1,83 @@
 <div class="add-doc-page">
   <div class="page-header">
-    <h1 class="page-title">Add New Document</h1>
-    <p class="page-subtitle">Upload a document to the Nexa repository for indexing and search.</p>
+    <h1 class="page-title">Ingest <span>Knowledge</span></h1>
+    <h2 class="sr-only">Add New Document</h2>
+    <p class="page-subtitle">Upload documents to the Nexa intelligence repository.</p>
   </div>
 
-  <div class="form-card">
+  <div class="form-container">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="add-doc-form">
 
       <div class="form-grid">
         <div class="custom-field field-full">
           <label for="title">Document Title</label>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matPrefix>title</mat-icon>
-            <input matInput id="title" formControlName="title" placeholder="Document title"/>
-            @if (form.controls.title.invalid && form.controls.title.touched) {
-              <mat-error>Title is required</mat-error>
-            }
-          </mat-form-field>
+          <div class="input-wrapper" [class.error]="form.controls.title.invalid && form.controls.title.touched">
+            <mat-icon>title</mat-icon>
+            <input id="title" formControlName="title" placeholder="e.g. Q3 Strategic Roadmap" autocomplete="off"/>
+          </div>
+          @if (form.controls.title.invalid && form.controls.title.touched) {
+            <span class="error-text">Title is required</span>
+          }
         </div>
 
         <div class="custom-field field-full">
-          <label for="description">Description</label>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matPrefix>description</mat-icon>
-            <textarea matInput id="description" formControlName="description" rows="4" placeholder="Document description"></textarea>
-            @if (form.controls.description.invalid && form.controls.description.touched) {
-              <mat-error>Description is required</mat-error>
-            }
-          </mat-form-field>
+          <label for="description">Insight Summary</label>
+          <div class="input-wrapper textarea" [class.error]="form.controls.description.invalid && form.controls.description.touched">
+            <mat-icon>description</mat-icon>
+            <textarea id="description" formControlName="description" rows="4" placeholder="Briefly describe the contents of this document..."></textarea>
+          </div>
+          @if (form.controls.description.invalid && form.controls.description.touched) {
+            <span class="error-text">Description is required</span>
+          }
         </div>
 
         <div class="custom-field">
-          <label for="doc-type">Document Type</label>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matPrefix>category</mat-icon>
-            <mat-select id="doc-type" formControlName="type" placeholder="Select type">
-              <mat-option [value]="DocType.PDF">PDF Document</mat-option>
-              <mat-option [value]="DocType.DOCX">Word Document</mat-option>
-            </mat-select>
-            @if (form.controls.type.invalid && form.controls.type.touched) {
-              <mat-error>Type is required</mat-error>
-            }
-          </mat-form-field>
+          <label for="doc-type">Format</label>
+          <div class="input-wrapper select">
+            <mat-icon>category</mat-icon>
+            <select id="doc-type" formControlName="type">
+              <option [ngValue]="null" disabled>Select format</option>
+              <option [value]="DocType.PDF">Portable Document Format (PDF)</option>
+              <option [value]="DocType.DOCX">Microsoft Word (DOCX)</option>
+            </select>
+          </div>
+          @if (form.controls.type.invalid && form.controls.type.touched) {
+            <span class="error-text">Type is required</span>
+          }
         </div>
 
         <div class="custom-field">
-          <label>File Selection</label>
+          <label>Source File</label>
           <div class="file-drop-zone" (click)="fileInput.click()" [class.has-file]="!!form.value.file">
             <input #fileInput type="file" id="file-input" hidden (change)="onFileChange($event)" accept=".pdf,.docx"/>
-            <mat-icon>{{ form.value.file ? 'check_circle' : 'cloud_upload' }}</mat-icon>
-            <div class="file-info">
-              <span class="file-name">{{ form.value.file ? form.value.file.name : 'Click to choose or drop file here' }}</span>
+            
+            <div class="drop-icon-box">
+              <mat-icon>{{ form.value.file ? 'verified' : 'cloud_upload' }}</mat-icon>
+            </div>
+            
+            <div class="file-details">
+              <span class="file-name">{{ form.value.file ? form.value.file.name : 'Choose file or drag here' }}</span>
               @if (!form.value.file) {
-                <span class="file-hint">PDF or DOCX up to 10MB</span>
+                <span class="file-hint">PDF, DOCX up to 10MB</span>
+              } @else {
+                <span class="file-size">{{ (form.value.file.size / 1024 / 1024) | number:'1.1-2' }} MB</span>
               }
             </div>
           </div>
           @if (form.controls.file.invalid && form.controls.file.touched) {
-            <div class="error-text">File is required</div>
+            <span class="error-text">Document file is required</span>
           }
         </div>
       </div>
 
-      <div class="form-actions">
-        <button class="custom-primary-btn" type="submit" id="submit-btn" [disabled]="submitting()">
+      <div class="form-footer">
+        <button class="custom-secondary-btn" type="button" (click)="form.reset()">Discard</button>
+        <button class="custom-primary-btn" type="submit" id="submit-btn" [disabled]="submitting() || form.invalid">
           @if (submitting()) {
-            <mat-spinner diameter="20"></mat-spinner>
-            <span>Uploading...</span>
+            <span class="loader-dots"><span></span><span></span><span></span></span>
           } @else {
-            <mat-icon>cloud_upload</mat-icon>
-            <span>Upload Document</span>
+            <mat-icon>auto_awesome</mat-icon>
+            <span>Upload & Index</span>
           }
         </button>
       </div>

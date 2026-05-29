@@ -7,7 +7,7 @@ describe('Upload documents', () => {
     it('should navigate to upload page', () => {
         cy.get('.add-doc-fab').click();
         cy.url().should('include', '/docs/new');
-        cy.contains('Add New Document').should('be.visible');
+        cy.contains('Ingest Knowledge').should('be.visible');
     })
     it('should upload document successfully', () => {
         cy.fixture('file-upload-success').then(data => {
@@ -24,13 +24,23 @@ describe('Upload documents', () => {
 
         })
         cy.get('.add-doc-fab').click();
-        cy.get("[placeholder='Document title']").type("test upload");
-        cy.get("[placeholder='Document description']").type("test upload");
-        cy.get('mat-select').click();
-        cy.contains('mat-option', 'PDF').click();
+        cy.get("#title").type("test upload");
+        cy.get("#description").type("test upload");
+        
+        // Handle both mat-select and native select for robustness
+        cy.get('body').then(($body) => {
+            if ($body.find('mat-select').length) {
+                cy.get('mat-select').click();
+                cy.contains('mat-option', 'PDF').click();
+            } else {
+                cy.get('select#doc-type').select('PDF');
+            }
+        });
+
         cy.get('#file-input').selectFile('cypress/fixtures/cat.jpg', {force: true});
         cy.get('#submit-btn').click();
 
+        cy.contains('Document added successfully', {timeout: 10000}).should('exist');
         cy.contains('Document added successfully').should('be.visible');
     })
 })

@@ -5,19 +5,14 @@ import {DocType} from '../../../core/models/doc.models';
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {switchMap} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {Router} from "@angular/router";
+import {CommonModule} from "@angular/common";
 
 @Component({
     selector: 'app-add-document',
     standalone: true,
-    imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinner],
+    imports: [ReactiveFormsModule, MatIconModule, CommonModule],
     templateUrl: './add-document.html',
     styleUrl: './add-document.scss',
 })

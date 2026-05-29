@@ -1,18 +1,24 @@
 :host {
   display: block;
-  padding: 4px 8px;
+  padding: 8px 16px;
 }
 
 .message-bubble {
   display: flex;
+  margin-bottom: 4px;
 
   &.mine {
     justify-content: flex-end;
 
     .bubble-content {
       background: var(--mat-sys-primary);
-      color: var(--mat-sys-on-primary);
-      border-radius: 16px 16px 4px 16px;
+      color: var(--mat-sys-on-primary, #ffffff);
+      border-radius: 20px 20px 4px 20px;
+      box-shadow: 0 4px 12px rgba(var(--mat-sys-primary-rgb, 37, 99, 235), 0.2);
+    }
+
+    .time {
+      color: rgba(255, 255, 255, 0.7);
     }
   }
 
@@ -20,29 +26,58 @@
     justify-content: flex-start;
 
     .bubble-content {
-      background: var(--mat-sys-surface-variant);
+      background: var(--mat-sys-surface-container-low);
+      color: var(--mat-sys-on-surface);
+      border-radius: 20px 20px 20px 4px;
+      border: 1px solid var(--mat-sys-outline-variant);
+      position: relative;
+      
+      // Insight gradient indicator for Bot/AI
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 21px 21px 21px 5px;
+        padding: 1px;
+        background: var(--app-gradient-accent);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.6;
+      }
+    }
+
+    .time {
       color: var(--mat-sys-on-surface-variant);
-      border-radius: 16px 16px 16px 4px;
     }
   }
 }
 
 .bubble-content {
-  padding: 8px 12px;
-  max-width: 70%;
+  padding: 12px 16px;
+  max-width: 80%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  position: relative;
+  transition: transform var(--app-transition-fast);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .content {
+  font-size: 0.9375rem;
+  line-height: 1.5;
   word-break: break-word;
   white-space: pre-wrap;
 }
 
 .time {
-  font-size: 0.7rem;
-  opacity: 0.7;
+  font-size: 0.6875rem;
+  font-weight: 500;
   align-self: flex-end;
+  opacity: 0.8;
 }
-

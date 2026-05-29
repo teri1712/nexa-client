@@ -19,7 +19,7 @@
         }
         <span class="spacer"></span>
 
-        <button mat-icon-button (click)="themeService.cycleTheme()" aria-label="Toggle theme">
+        <button class="theme-toggle-btn" (click)="themeService.cycleTheme()" aria-label="Toggle theme">
             <mat-icon>{{ getThemeIcon(themeService.currentTheme()) }}</mat-icon>
         </button>
 

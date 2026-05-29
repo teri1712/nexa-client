@@ -11,7 +11,7 @@ describe('Messaging with bot', () => {
         cy.get('#bot-bubble').click();
 
         cy.url().should('include', 'messages');
-        cy.contains('Nexa bot').should('be.visible');
+        cy.contains('Nexa Intelligence').should('be.visible');
     });
     it('should display full 10 messsage when user open message list', () => {
         cy.fixture('first-10-messages-success').then(data => {

@@ -50,7 +50,7 @@ describe('Login', () => {
             cy.contains('Sign in as Admin').click();
             cy.contains('Admin Sign in').should('be.visible');
 
-            cy.contains('Back').click();
+            cy.get('.back-link').click();
             cy.contains('Google').should('be.visible');
         });
     })

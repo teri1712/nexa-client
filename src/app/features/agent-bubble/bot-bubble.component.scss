@@ -1,11 +1,80 @@
 :host {
   display: block;
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 32px;
+  right: 32px;
   z-index: 1000;
 }
 
-:host:hover {
+#bot-bubble {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--app-gradient-accent);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.4);
   cursor: pointer;
+  transition: all var(--app-transition-base);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    transition: transform var(--app-transition-fast);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity var(--app-transition-fast);
+  }
+
+  &:hover {
+    transform: scale(1.1) translateY(-4px);
+    box-shadow: 0 10px 30px rgba(13, 148, 136, 0.6);
+
+    mat-icon {
+      transform: rotate(12deg) scale(1.1);
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  animation: pulse-glow 3s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(13, 148, 136, 0.7), 0 0 50px rgba(45, 212, 191, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #bot-bubble {
+    animation: none;
+    transition: none;
+  }
 }

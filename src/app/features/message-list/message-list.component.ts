@@ -3,28 +3,14 @@ import {MessageService} from "../../core/services/message.service";
 import {Message} from "../../core/models/message.models";
 import {MessageComponent} from "../message/message.component";
 import {BotService} from "../../core/services/bot.service";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {map, timer} from "rxjs";
 
 @Component({
     selector: 'app-message-list',
     imports: [
         MessageComponent,
-        MatProgressSpinnerModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
         MatIconModule,
-        MatToolbarModule,
-        MatTooltipModule,
-        CdkTextareaAutosize,
     ],
     providers: [BotService],
     templateUrl: './message-list.component.html',
