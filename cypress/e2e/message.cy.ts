@@ -5,10 +5,14 @@ describe('Messaging with bot', () => {
     })
     it('should open message list when user click bot bubble', () => {
         cy.fixture('doc-detail-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/docs/doc_001', {statusCode: 200, body: data})
+            cy.intercept('GET', '/api/docs/doc_001', {statusCode: 200, body: data})
         })
         cy.fixture('first-10-messages-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=*&docId=doc_001', {statusCode: 200, body: data, delay: 1000})
+            cy.intercept('GET', '/api/messages?anchorSeq=*&docId=doc_001', {
+                statusCode: 200,
+                body: data,
+                delay: 1000
+            })
         })
         cy.visit('/docs/doc_001');
         cy.get('#bot-bubble').click();
@@ -18,13 +22,21 @@ describe('Messaging with bot', () => {
     });
     it('should display full 10 messsage when user open message list', () => {
         cy.fixture('doc-detail-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/docs/doc_001', {statusCode: 200, body: data})
+            cy.intercept('GET', '/api/docs/doc_001', {statusCode: 200, body: data})
         })
         cy.fixture('first-10-messages-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=*&docId=doc_001', {statusCode: 200, body: data, delay: 1000})
+            cy.intercept('GET', '/api/messages?anchorSeq=*&docId=doc_001', {
+                statusCode: 200,
+                body: data,
+                delay: 1000
+            })
         })
-        cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=1&docId=doc_001', {statusCode: 200, body: [], delay: 1000})
-        
+        cy.intercept('GET', '/api/messages?anchorSeq=1&docId=doc_001', {
+            statusCode: 200,
+            body: [],
+            delay: 1000
+        })
+
         cy.visit('/docs/doc_001');
         cy.get('#bot-bubble').click();
 
@@ -33,16 +45,28 @@ describe('Messaging with bot', () => {
 
     it('should download more message when user scroll up', () => {
         cy.fixture('doc-detail-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/docs/doc_001', {statusCode: 200, body: data})
+            cy.intercept('GET', '/api/docs/doc_001', {statusCode: 200, body: data})
         })
         cy.fixture('next-20-messages-from-10-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=9007199254740991&docId=doc_001', {statusCode: 200, body: data, delay: 500}).as('getInitialMessages')
+            cy.intercept('GET', '/api/messages?anchorSeq=9007199254740991&docId=doc_001', {
+                statusCode: 200,
+                body: data,
+                delay: 500
+            }).as('getInitialMessages')
         })
         cy.fixture('first-10-messages-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=11&docId=doc_001', {statusCode: 200, body: data, delay: 500}).as('getMoreMessages')
+            cy.intercept('GET', '/api/messages?anchorSeq=11&docId=doc_001', {
+                statusCode: 200,
+                body: data,
+                delay: 500
+            }).as('getMoreMessages')
         })
-        cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=1&docId=doc_001', {statusCode: 200, body: [], delay: 500})
-        
+        cy.intercept('GET', '/api/messages?anchorSeq=1&docId=doc_001', {
+            statusCode: 200,
+            body: [],
+            delay: 500
+        })
+
         cy.visit('/docs/doc_001');
         cy.get('#bot-bubble').click();
         cy.wait('@getInitialMessages');
@@ -55,16 +79,19 @@ describe('Messaging with bot', () => {
 
     it('should show sending progress when user click send', () => {
         cy.fixture('doc-detail-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/docs/doc_001', {statusCode: 200, body: data})
+            cy.intercept('GET', '/api/docs/doc_001', {statusCode: 200, body: data})
         })
         cy.fixture('first-10-messages-success').then(messages => {
-            cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=*&docId=doc_001', {statusCode: 200, body: messages})
+            cy.intercept('GET', '/api/messages?anchorSeq=*&docId=doc_001', {
+                statusCode: 200,
+                body: messages
+            })
         })
         cy.fixture('send-message-success').then(sendResult => {
-            cy.intercept('POST', 'http://localhost:8080/messages**', {statusCode: 200, body: sendResult, delay: 500})
+            cy.intercept('POST', '/api/messages**', {statusCode: 200, body: sendResult, delay: 500})
         })
-        cy.fixture('bot-response-success').then(data => {
-            cy.intercept('POST', 'http://localhost:8080/fill**', {
+        cy.fixture('fill-response-success').then(data => {
+            cy.intercept('POST', '/api/fill**', {
                 statusCode: 200,
                 body: data,
                 headers: {'Content-Type': 'text/plain'},
@@ -84,16 +111,19 @@ describe('Messaging with bot', () => {
 
     it('should show bot message stream when user ask something', () => {
         cy.fixture('doc-detail-success').then(data => {
-            cy.intercept('GET', 'http://localhost:8080/docs/doc_001', {statusCode: 200, body: data})
+            cy.intercept('GET', '/api/docs/doc_001', {statusCode: 200, body: data})
         })
         cy.fixture('first-10-messages-success').then(messages => {
-            cy.intercept('GET', 'http://localhost:8080/messages?anchorSeq=*&docId=doc_001', {statusCode: 200, body: messages})
+            cy.intercept('GET', '/api/messages?anchorSeq=*&docId=doc_001', {
+                statusCode: 200,
+                body: messages
+            })
         })
         cy.fixture('send-message-success').then(sendResult => {
-            cy.intercept('POST', 'http://localhost:8080/messages**', {statusCode: 200, body: sendResult})
+            cy.intercept('POST', '/api/messages**', {statusCode: 200, body: sendResult})
         })
-        cy.fixture('bot-response-success').then(data => {
-            cy.intercept('POST', 'http://localhost:8080/bot/fill', {
+        cy.fixture('fill-response-success').then(data => {
+            cy.intercept('POST', '/api/fill', {
                 statusCode: 200,
                 body: data,
                 headers: {'Content-Type': 'text/plain'},

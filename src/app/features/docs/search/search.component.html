@@ -1,9 +1,9 @@
-<div class="search-page" [class.has-results]="results.value()">
+<div class="search-page" [class.has-results]="query()">
     <!-- Hero / Search Hub -->
     <div class="search-hero">
         <div class="hero-brand">
             <h1 class="search-logo">Nexa<span>Search</span></h1>
-            @if (!results.value()) {
+            @if (!query()) {
                 <p class="hero-tagline">Find organization intelligence instantly.</p>
             }
         </div>
@@ -57,39 +57,38 @@
         </div>
     </div>
 
-    <!-- Results Section -->
-    @if (results.isLoading() ||
-    results.value() ||
-    results.error() ||
-    suggestions.isLoading() ||
-    suggestions.value()) {
-        <div class="results-layout">
-            <!-- AI Insight Panel -->
-            @if (suggestions.isLoading() || suggestions.value()) {
-                <div class="insight-panel">
-                    <div class="insight-header">
-                        <div class="insight-title">
-                            <mat-icon>auto_awesome</mat-icon>
-                            AI Overview
-                        </div>
-                        <div class="insight-badge">Powered by Nexa AI</div>
+    <!-- AI Insight Section -->
+    @if (query()) {
+        <div class="suggestions-section">
+            <div class="insight-panel">
+                <div class="insight-header">
+                    <div class="insight-title">
+                        <mat-icon>auto_awesome</mat-icon>
+                        AI Overview
                     </div>
-
-                    <div class="insight-content">
-                        @if (suggestions.isLoading()) {
-                            <div id="suggestion-spinner" class="skeleton-loader">
-                                <div class="skeleton-line wide"></div>
-                                <div class="skeleton-line medium"></div>
-                                <div class="skeleton-line wide"></div>
-                            </div>
-                        } @else if (suggestions.value(); as suggestion) {
-                            <p id="suggestion-box" class="suggestion-text">{{ suggestion }}</p>
-                        }
-                    </div>
+                    <div class="insight-badge">Powered by Nexa AI</div>
                 </div>
-            }
 
-            <!-- Search Results -->
+                <div class="insight-content">
+                    @if (suggestions.isLoading()) {
+                        <div id="suggestion-spinner" class="skeleton-loader">
+                            <div class="skeleton-line wide"></div>
+                            <div class="skeleton-line medium"></div>
+                            <div class="skeleton-line wide"></div>
+                        </div>
+                    } @else if (suggestions.value(); as suggestion) {
+                        <p id="suggestion-box" class="suggestion-text">{{ suggestion }}</p>
+                    } @else if (suggestions.error()) {
+                        <p class="error-text">Failed to generate AI overview.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Search Results Section -->
+    @if (query()) {
+        <div class="results-section">
             <div class="results-main">
                 @if (results.isLoading()) {
                     <div id="search-spinner" class="results-skeleton">

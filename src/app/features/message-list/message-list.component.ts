@@ -2,7 +2,7 @@ import {Component, computed, effect, ElementRef, inject, input, signal, untracke
 import {MessageService} from "../../core/services/message.service";
 import {Message} from "../../core/models/message.models";
 import {MessageComponent} from "../message/message.component";
-import {BotService} from "../../core/services/bot.service";
+import {FillmentService} from "../../core/services/fillment.service";
 import {MatIconModule} from "@angular/material/icon";
 import {map, timer} from "rxjs";
 
@@ -12,7 +12,7 @@ import {map, timer} from "rxjs";
         MessageComponent,
         MatIconModule,
     ],
-    providers: [BotService],
+    providers: [FillmentService],
     templateUrl: './message-list.component.html',
     styleUrl: './message-list.component.scss',
 })
@@ -48,7 +48,7 @@ export class MessageListComponent {
     message = signal('');
 
     private messageService = inject(MessageService);
-    private botService = inject(BotService);
+    private botService = inject(FillmentService);
 
     constructor() {
         effect(() => {
