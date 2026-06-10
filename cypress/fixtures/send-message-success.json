@@ -1,0 +1,15 @@
+{
+  "userMessage": {
+    "sequenceNumber": 11,
+    "content": "Tell me about Kamen Rider Decade",
+    "createdAt": "2026-04-23T09:10:00Z",
+    "mine": true
+  },
+  "placeholderMessage": {
+    "sequenceNumber": 12,
+    "content": "",
+    "createdAt": "2026-04-23T09:10:01Z",
+    "mine": false
+  }
+}
+

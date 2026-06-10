@@ -1,0 +1,122 @@
+[
+  {
+    "sequenceNumber": 30,
+    "content": "Alright, heading out now.",
+    "createdAt": "2026-04-23T09:28:00Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 29,
+    "content": "Cool, I’ll grab a table.",
+    "createdAt": "2026-04-23T09:27:10Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 28,
+    "content": "Traffic looks fine, shouldn’t be late.",
+    "createdAt": "2026-04-23T09:26:25Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 27,
+    "content": "Same here, leaving in a bit.",
+    "createdAt": "2026-04-23T09:25:40Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 26,
+    "content": "Wrapping up some work first.",
+    "createdAt": "2026-04-23T09:24:55Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 25,
+    "content": "No rush, I’m still around.",
+    "createdAt": "2026-04-23T09:24:05Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 24,
+    "content": "Do they have good pastries?",
+    "createdAt": "2026-04-23T09:23:20Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 23,
+    "content": "Yeah, their croissants are great.",
+    "createdAt": "2026-04-23T09:22:35Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 22,
+    "content": "Nice, I might grab one.",
+    "createdAt": "2026-04-23T09:21:50Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 21,
+    "content": "You should, they sell out fast.",
+    "createdAt": "2026-04-23T09:21:05Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 20,
+    "content": "Got it, I’ll be there soon.",
+    "createdAt": "2026-04-23T09:20:20Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 19,
+    "content": "Take your time.",
+    "createdAt": "2026-04-23T09:19:35Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 18,
+    "content": "Should I order first?",
+    "createdAt": "2026-04-23T09:18:50Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 17,
+    "content": "Up to you, I’ll join shortly.",
+    "createdAt": "2026-04-23T09:18:05Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 16,
+    "content": "Alright, see you in a bit.",
+    "createdAt": "2026-04-23T09:17:20Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 15,
+    "content": "Yep, heading there now.",
+    "createdAt": "2026-04-23T09:16:35Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 14,
+    "content": "I’ll leave in 5 minutes.",
+    "createdAt": "2026-04-23T09:15:50Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 13,
+    "content": "Same, just packing up.",
+    "createdAt": "2026-04-23T09:15:05Z",
+    "mine": false
+  },
+  {
+    "sequenceNumber": 12,
+    "content": "Let’s meet at the entrance.",
+    "createdAt": "2026-04-23T09:14:20Z",
+    "mine": true
+  },
+  {
+    "sequenceNumber": 11,
+    "content": "Sure, that works.",
+    "createdAt": "2026-04-23T09:13:35Z",
+    "mine": false
+  }
+]

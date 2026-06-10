@@ -1,0 +1,237 @@
+import {Component, computed, effect, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';
+import {MessageService} from "../../core/services/message.service";
+import {Message} from "../../core/models/message.models";
+import {MessageComponent} from "../message/message.component";
+import {BotService} from "../../core/services/bot.service";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {map, timer} from "rxjs";
+
+@Component({
+    selector: 'app-message-list',
+    imports: [
+        MessageComponent,
+        MatProgressSpinnerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        CdkTextareaAutosize,
+    ],
+    providers: [BotService],
+    templateUrl: './message-list.component.html',
+    styleUrl: './message-list.component.scss',
+})
+export class MessageListComponent implements OnInit {
+    private messages = signal<Message[]>([]);
+    private sendingMessage = signal<SendingMessage | undefined>(undefined);
+    private placeholderMessage = signal<Message | undefined>(undefined);
+    private placeholderSeq = computed(() => this.placeholderMessage()?.sequenceNumber)
+
+    cancellable = computed(() => this.placeholderMessage() || this.sendingMessage()?.status === 'sending')
+
+    private messagesArea = viewChild<ElementRef<HTMLElement>>('messagesArea');
+    private isAtBottom = true;
+
+    displayMessages = computed(() => {
+        let messages = this.messages();
+        const sending = this.sendingMessage();
+        const reply = this.placeholderMessage();
+        if (sending && sending.status === 'sending') {
+            messages = messages.concat(sending);
+        }
+        if (reply) {
+            messages = messages.concat(reply);
+        }
+        return messages;
+    });
+
+    loading = computed(() => this.loadingTrigger() && !this.end());
+    private loadingTrigger = signal(false);
+    private end = signal(false);
+    message = signal('');
+
+    private messageService = inject(MessageService);
+    private botService = inject(BotService);
+
+    constructor() {
+        effect((onCleanup) => {
+            if (this.loading()) {
+                const snapshot = this.messages();
+                const first = snapshot.at(0);
+                const sub = this.messageService.list(first)
+                    .pipe(map(messages => messages.reverse()))
+                    .subscribe({
+                        next: messages => {
+                            this.messages.set(messages.concat(snapshot));
+                            this.end.set(messages.length === 0)
+                            if (snapshot.length === 0) this.scrollToBottom()
+                        },
+                        error: (err) => {
+                            console.error(err)
+                            this.loadingTrigger.set(false)
+                        },
+                        complete: () => {
+                            this.loadingTrigger.set(false);
+                        },
+                    });
+                onCleanup(() => sub.unsubscribe());
+            }
+        });
+
+        effect((onCleanup) => {
+            const placeholderSeq = this.placeholderSeq();
+            if (placeholderSeq) {
+                const sub = this.botService.fill(placeholderSeq)
+                    .subscribe({
+                        next: (chunk) => {
+                            const placeholder = this.placeholderMessage()!;
+                            const aggregated = (placeholder?.content ?? '') + chunk;
+                            this.placeholderMessage.set({...placeholder, content: aggregated});
+                        },
+                        complete: () => {
+                            const reply = this.placeholderMessage()!
+
+                            this.placeholderMessage.set(undefined);
+                            this.prepend(reply)
+                        },
+                    });
+                onCleanup(() => sub.unsubscribe());
+            }
+        });
+
+        effect(() => {
+            const sending = this.sendingMessage();
+            if (sending?.status === 'sending') {
+                this.scrollToBottom()
+            }
+        });
+
+        // Auto-scroll to bottom on new messages if already at bottom
+        effect(() => {
+            this.displayMessages(); // track
+            if (this.isAtBottom) {
+                this.scrollToBottom();
+            }
+        });
+
+        effect((onCleanup) => {
+            const sending = this.sendingMessage();
+            if (sending) {
+                const message = sending.content
+                const sub = this.messageService.send(message)
+                    .subscribe({
+                        next: (res) => {
+                            const sent = res.userMessage
+                            this.prepend(sent)
+
+                            this.sendingMessage.set(undefined);
+                            this.placeholderMessage.set(res.placeholderMessage)
+                        },
+                        error: () => {
+                            this.sendingMessage.set({...sending, status: 'error'});
+                        },
+                    });
+                onCleanup(() => sub.unsubscribe())
+            }
+        });
+    }
+
+    private prepend(message: Message) {
+        this.messages.update(messages => messages.concat([message]))
+    }
+
+    scrollToBottom() {
+        timer(1).subscribe(() => {
+            const el = this.messagesArea()?.nativeElement;
+            if (el) el.scrollTop = el.scrollHeight;
+        });
+    }
+
+    ngOnInit() {
+        this.loadingTrigger.set(true);
+    }
+
+    isSendingMessage(msg: Message): msg is SendingMessage {
+        return 'status' in msg;
+    }
+
+    onMessagesScroll(event: Event) {
+        const el = event.target as HTMLElement;
+        const threshold = 40; // px from bottom
+        this.isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= threshold;
+        if (el.scrollTop === 0) {
+            this.onScrollChangeToFirstElement();
+        }
+    }
+
+    onScrollChangeToFirstElement() {
+        if (!this.loading()) {
+            this.loadingTrigger.set(true);
+        }
+    }
+
+    onRetryErrorMessage() {
+        this.onSendClicked();
+    }
+
+    private doSend(message: string) {
+        const sending: SendingMessage = {
+            content: message,
+            status: 'sending',
+            createdAt: Date.now().toString(),
+            mine: true,
+            sequenceNumber: Number.MAX_SAFE_INTEGER,
+        };
+        this.sendingMessage.set(sending);
+    }
+
+    onSendClicked() {
+        const message = this.message();
+        const sending = this.sendingMessage();
+        if (sending?.status !== 'sending') {
+            this.doSend(message);
+            this.message.set('');
+        }
+    }
+
+    onCancelClicked() {
+        const sending = this.sendingMessage();
+        if (sending?.status === 'sending') {
+            const canceled: Message = {
+                sequenceNumber: Number.MAX_SAFE_INTEGER,
+                content: sending.content,
+                createdAt: Date.now().toString(),
+                mine: true
+            }
+            this.prepend(canceled)
+
+            this.sendingMessage.set(undefined)
+        } else {
+            const placeholder = this.placeholderMessage()
+            if (placeholder) {
+                const canceled: Message = {
+                    sequenceNumber: Number.MAX_SAFE_INTEGER,
+                    content: placeholder.content ?? '',
+                    createdAt: Date.now().toString(),
+                    mine: true
+                }
+                this.prepend(canceled)
+
+                this.placeholderMessage.set(undefined)
+            }
+        }
+    }
+}
+
+export interface SendingMessage extends Message {
+    readonly status: 'sending' | 'error';
+}

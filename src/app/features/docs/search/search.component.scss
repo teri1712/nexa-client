@@ -1,0 +1,160 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.search-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px 48px;
+}
+
+/* ── Hero ── */
+.search-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  padding-top: 60px;
+  transition: padding-top 0.3s ease;
+
+  .search-page.has-results & {
+    padding-top: 20px;
+  }
+}
+
+/* 1. Single color logo */
+.search-logo {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--mat-sys-primary);
+  letter-spacing: -0.5px;
+}
+
+/* ── Search bar row ── */
+.search-bar-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 0;
+  /* 2. Compact height */
+  --mdc-outlined-text-field-container-height: 42px;
+}
+
+.filter-field {
+  width: 100px;
+  flex-shrink: 0;
+  --mdc-outlined-text-field-container-height: 42px;
+}
+
+.search-btn {
+  flex-shrink: 0;
+  height: 42px;
+  margin-top: 4px;
+}
+
+/* ── Results column (single, full-width under search) ── */
+.results-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 16px;
+}
+
+/* 3. AI Overview full-width above results */
+.suggestion-panel {
+  width: 100%;
+}
+
+.suggestion-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.suggestion-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.result-count {
+  font-size: 0.78rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+/* ── Pagination ── */
+.pagination {
+  margin-top: 8px;
+}
+
+/* ── Skeleton ── */
+@keyframes shimmer {
+  0% {
+    background-position: -500px 0;
+  }
+  100% {
+    background-position: 500px 0;
+  }
+}
+
+.skeleton-card {
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 3px;
+  background: linear-gradient(
+                  90deg,
+                  var(--mat-sys-surface-variant) 25%,
+                  var(--mat-sys-surface-container-highest) 50%,
+                  var(--mat-sys-surface-variant) 75%
+  );
+  background-size: 500px 100%;
+  animation: shimmer 1.4s infinite linear;
+
+  &.wide {
+    width: 100%;
+  }
+
+  &.medium {
+    width: 65%;
+  }
+
+  &.short {
+    width: 35%;
+  }
+}
+
+.suggestion-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+/* ── Status ── */
+.status-text {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.9rem;
+
+  &.error {
+    color: var(--mat-sys-error);
+  }
+}

@@ -1,0 +1,47 @@
+:host { display: block; }
+
+.document-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 8px 16px 32px;
+}
+
+.doc-toolbar {
+  margin-bottom: 12px;
+}
+
+.loading-state, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 0;
+  text-align: center;
+}
+
+.doc-card {
+  margin-top: 4px;
+}
+
+.doc-avatar {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px !important;
+}
+
+.doc-description {
+  color: var(--mat-sys-on-surface);
+  line-height: 1.6;
+  margin: 0;
+}

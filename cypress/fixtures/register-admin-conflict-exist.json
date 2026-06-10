@@ -1,0 +1,6 @@
+{
+  "title": "Username constraint",
+  "status": 409,
+  "detail": "User already exist",
+  "instance": "/admins"
+}

@@ -1,0 +1,6 @@
+<div class="message-bubble" [class.mine]="message()?.mine" [class.bot]="!message()?.mine">
+  <div class="bubble-content">
+    <span class="content">{{ message()?.content }}</span>
+    <span class="time">{{ message()?.createdAt | date:'shortTime' }}</span>
+  </div>
+</div>
