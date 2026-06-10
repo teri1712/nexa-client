@@ -31,13 +31,20 @@ export const routes: Routes = [
     {
         path: '',
         component: HomeComponent,
-        canActivate: [authGuard],
+        providers: [ProfileService],
         children: [
             {
                 path: 'profile',
-                providers: [ProfileService],
+                canActivate: [authGuard],
                 loadComponent: () =>
                     import('./features/profile/profile').then(m => m.ProfileComponent),
+            },
+            {
+                path: 'docs/:docId/messages',
+                outlet: 'right',
+                runGuardsAndResolvers: 'always',
+                providers: [MessageService],
+                loadComponent: () => import('./features/message-list/message-list.component').then(m => m.MessageListComponent),
             },
             {
                 path: 'docs',
@@ -45,13 +52,6 @@ export const routes: Routes = [
                 component: DocDashboardComponent,
                 loadChildren: () => import('./features/docs/doc.routes').then(m => m.docRoutes)
             },
-            {
-                path: 'messages',
-                outlet: 'right',
-                providers: [MessageService],
-                loadComponent: () => import('./features/message-list/message-list.component').then(m => m.MessageListComponent),
-            },
         ]
     },
-    {path: '**', redirectTo: '/docs/dashboard'},
 ];

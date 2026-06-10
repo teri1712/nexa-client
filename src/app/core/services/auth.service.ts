@@ -17,17 +17,6 @@ export class AuthService extends TokenStore implements IAuthService {
     private readonly http = inject(HttpClient);
     private readonly base = environment.apiUrl;
 
-    /** Google OIDC login – sends ID token via OIDC-Token header */
-    loginWithOidc(idToken: string) {
-        return this.http
-            .post<AccountResponse>(`${this.base}/user-login`, null, {
-                headers: {'OIDC-Token': idToken},
-            })
-            .pipe(tap(res =>
-                    this.storeSession(res.profile, res.accessToken)),
-                map(account => account.profile));
-    }
-
     /** Admin username/password login */
     loginWithCredentials(credentials: AdminLoginRequest) {
         const params = new HttpParams()
@@ -55,16 +44,6 @@ export class AuthService extends TokenStore implements IAuthService {
      * then clears the local session and navigates to login.
      */
     logout(): void {
-        const refreshToken = this.getRefreshToken();
-        if (refreshToken) {
-            const body = new HttpParams().set('refresh_token', refreshToken);
-            this.http
-                .post(`${this.base}/logout`, body)
-                .subscribe({
-                    error: () => {
-                    }
-                });
-        }
         this.clearSession();
     }
 

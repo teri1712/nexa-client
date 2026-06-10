@@ -1,7 +1,11 @@
+@if (splash()) {
+    <app-splash-screen/>
+}
+
 <div class="app-shell">
     <mat-toolbar class="navbar">
-        <a mat-button routerLink="/docs/dashboard" class="brand-btn">
-            <span class="brand-icon">N</span>
+        <a routerLink="/docs/dashboard" class="brand-btn">
+            <img src="logo.svg" alt="Nexa Logo" class="brand-logo">
             <span class="brand-name">Nexa</span>
         </a>
 
@@ -9,9 +13,11 @@
            [routerLinkActiveOptions]="{ exact: true }">
             Search
         </a>
-        <a mat-button routerLink="/profile" routerLinkActive="nav-active">
-            Profile
-        </a>
+        @if (tokenService.isLoggedIn()) {
+            <a mat-button routerLink="/profile" routerLinkActive="nav-active">
+                Profile
+            </a>
+        }
         @if (profileStore.isAdmin()) {
             <a mat-button routerLink="/auth/register-admin" routerLinkActive="nav-active">
                 Register Admin
@@ -23,11 +29,18 @@
             <mat-icon>{{ getThemeIcon(themeService.currentTheme()) }}</mat-icon>
         </button>
 
-        <span class="nav-user">{{ profileStore.profile()?.name }}</span>
-        <button mat-stroked-button (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            Sign out
-        </button>
+        @if (tokenService.isLoggedIn()) {
+            <span class="nav-user">{{ profileStore.profile()?.name }}</span>
+            <button mat-stroked-button (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                Sign out
+            </button>
+        } @else {
+            <a mat-flat-button color="primary" routerLink="/auth/login">
+                <mat-icon>login</mat-icon>
+                Sign in
+            </a>
+        }
     </mat-toolbar>
 
     <mat-sidenav-container class="main-container">
@@ -41,8 +54,4 @@
                            (deactivate)="chatSidenav.close(); chatOpen.set(false)"/>
         </mat-sidenav>
     </mat-sidenav-container>
-
-    @if (!chatOpen()) {
-        <app-bot-bubble/>
-    }
 </div>

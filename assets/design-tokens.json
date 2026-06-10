@@ -35,8 +35,14 @@
       "xl": { "$value": "24px", "$type": "dimension" }
     },
     "shadow": {
-      "md": { "$value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "$type": "shadow" },
-      "lg": { "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "$type": "shadow" }
+      "md": {
+        "$value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "$type": "shadow"
+      },
+      "lg": {
+        "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "$type": "shadow"
+      }
     }
   },
   "semantic": {
@@ -50,24 +56,39 @@
       "border": { "$value": "#1E293B", "$type": "color" }
     },
     "gradient": {
-      "primary": { "$value": "linear-gradient(135deg, #0F172A 0%, #2563EB 100%)", "$type": "gradient" },
-      "insight": { "$value": "linear-gradient(135deg, #0D9488 0%, #22D3EE 100%)", "$type": "gradient" }
+      "primary": {
+        "$value": "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+        "$type": "gradient"
+      },
+      "insight": {
+        "$value": "linear-gradient(135deg, #0D9488 0%, #22D3EE 100%)",
+        "$type": "gradient"
+      }
     }
   },
   "component": {
     "button": {
-      "primary-bg": { "$value": "linear-gradient(135deg, #0F172A 0%, #2563EB 100%)", "$type": "gradient" },
+      "primary-bg": {
+        "$value": "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+        "$type": "gradient"
+      },
       "primary-text": { "$value": "#FFFFFF", "$type": "color" },
       "secondary-border": { "$value": "#1E293B", "$type": "color" }
     },
     "card": {
       "bg": { "$value": "#0F172A", "$type": "color" },
       "border": { "$value": "#1E293B", "$type": "color" },
-      "shadow": { "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "$type": "shadow" }
+      "shadow": {
+        "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "$type": "shadow"
+      }
     },
     "insight-panel": {
       "bg": { "$value": "#0F172A", "$type": "color" },
-      "border-accent": { "$value": "linear-gradient(135deg, #0D9488 0%, #22D3EE 100%)", "$type": "gradient" }
+      "border-accent": {
+        "$value": "linear-gradient(135deg, #0D9488 0%, #22D3EE 100%)",
+        "$type": "gradient"
+      }
     }
   }
 }

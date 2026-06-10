@@ -2,27 +2,32 @@
 @import '../assets/design-tokens.css';
 
 // Light theme: Ocean Blue — Professional & Trustworthy
-$light-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$azure-palette, // Switched from violet to azure/blue
-  ),
-  density: (
-    scale: 0
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      // Switched from violet to azure/blue
+    ),
+    density: (
+      scale: 0,
+    ),
   )
-));
+);
 
 // Dark theme: Deep Slate/Midnight — High-end Enterprise look
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$blue-palette,
-    tertiary: mat.$cyan-palette,
-  ),
-  density: (
-    scale: 0
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$blue-palette,
+      tertiary: mat.$cyan-palette,
+    ),
+    density: (
+      scale: 0,
+    ),
   )
-));
+);
 
 html {
   @include mat.core();
@@ -36,21 +41,21 @@ html {
   color-scheme: dark;
 
   // Modern Midnight/Slate Dark Mode
-  --mat-sys-background:               #020617;
-  --mat-sys-surface:                  #0f172a;
-  --mat-sys-surface-dim:              #020617;
-  --mat-sys-surface-bright:           #1e293b;
+  --mat-sys-background: #020617;
+  --mat-sys-surface: #0f172a;
+  --mat-sys-surface-dim: #020617;
+  --mat-sys-surface-bright: #1e293b;
   --mat-sys-surface-container-lowest: #000000;
-  --mat-sys-surface-container-low:    #0f172a;
-  --mat-sys-surface-container:        #1e293b;
-  --mat-sys-surface-container-high:   #334155;
+  --mat-sys-surface-container-low: #0f172a;
+  --mat-sys-surface-container: #1e293b;
+  --mat-sys-surface-container-high: #334155;
   --mat-sys-surface-container-highest: #475569;
 
-  --mat-sys-on-background:    #f8fafc;
-  --mat-sys-on-surface:       #f8fafc;
+  --mat-sys-on-background: #f8fafc;
+  --mat-sys-on-surface: #f8fafc;
   --mat-sys-on-surface-variant: #94a3b8;
-  --mat-sys-outline:          #334155;
-  --mat-sys-outline-variant:  #1e293b;
+  --mat-sys-outline: #334155;
+  --mat-sys-outline-variant: #1e293b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -64,7 +69,9 @@ html.dark-theme {
 }
 
 /* ── Reset / base ──────────────────────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -82,7 +89,11 @@ html.dark-theme {
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   background-color: var(--mat-sys-background);
   color: var(--mat-sys-on-background);
   -webkit-font-smoothing: antialiased;
@@ -95,25 +106,34 @@ body {
   --app-radius-md: 10px;
   --app-radius-lg: 16px;
   --app-radius-xl: 24px;
-  
+
   --app-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --app-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --app-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  
+
   --app-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --app-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
   // New Gradient Tokens
-  --app-gradient-primary: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
-  --app-gradient-surface: linear-gradient(to bottom right, var(--mat-sys-surface), var(--mat-sys-surface-container-low));
+  --app-gradient-primary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --app-gradient-surface: linear-gradient(
+    to bottom right,
+    var(--mat-sys-surface),
+    var(--mat-sys-surface-container-low)
+  );
   --app-gradient-accent: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%);
 }
 
-body, .mat-mdc-sidenav-container, .mat-mdc-sidenav-content, .mat-mdc-toolbar, .mat-mdc-card {
-  transition: background-color var(--app-transition-base), 
-              color var(--app-transition-base), 
-              border-color var(--app-transition-base), 
-              box-shadow var(--app-transition-base);
+body,
+.mat-mdc-sidenav-container,
+.mat-mdc-sidenav-content,
+.mat-mdc-toolbar,
+.mat-mdc-card {
+  transition:
+    background-color var(--app-transition-base),
+    color var(--app-transition-base),
+    border-color var(--app-transition-base),
+    box-shadow var(--app-transition-base);
 }
 
 /* ── Custom Form Elements ───────────────────────────────────────────────── */
@@ -167,7 +187,7 @@ body, .mat-mdc-sidenav-container, .mat-mdc-sidenav-content, .mat-mdc-toolbar, .m
     border-color: var(--mat-sys-primary);
     background: var(--mat-sys-surface);
     box-shadow: 0 0 0 4px rgba(var(--mat-sys-primary-rgb), 0.1);
-    
+
     mat-icon {
       color: var(--mat-sys-primary);
     }
@@ -176,7 +196,7 @@ body, .mat-mdc-sidenav-container, .mat-mdc-sidenav-content, .mat-mdc-toolbar, .m
   &.error {
     border-color: var(--mat-sys-error);
     background: var(--mat-sys-error-container);
-    
+
     mat-icon {
       color: var(--mat-sys-error);
     }
@@ -284,7 +304,9 @@ body, .mat-mdc-sidenav-container, .mat-mdc-sidenav-content, .mat-mdc-toolbar, .m
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  mat-slider { flex: 1; }
+  mat-slider {
+    flex: 1;
+  }
 }
 
 .slider-cap {

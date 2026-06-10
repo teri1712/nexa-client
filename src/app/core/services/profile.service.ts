@@ -12,13 +12,9 @@ export class ProfileService {
     private readonly base = environment.apiUrl;
 
     getFreshProfile() {
-        this.http
+        return this.http
             .get<ProfileResponse>(`${this.base}/profiles/me`)
-            .subscribe({
-                next: profile => this.profileStore.updateProfile(profile),
-                error: (err) => console.error(err)
-            });
-        return this.profileStore.profile
+            .pipe(tap(profile => this.profileStore.updateProfile(profile)));
     }
 
     updateProfile(data: ProfileRequest) {

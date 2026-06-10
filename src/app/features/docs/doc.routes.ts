@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {adminGuard} from '../../core/guards/admin.guard';
+import {authGuard} from "../../core/guards/auth.guard";
 
 export const docRoutes: Routes = [
     {
@@ -8,7 +9,7 @@ export const docRoutes: Routes = [
     },
     {
         path: 'new',
-        canActivate: [adminGuard],
+        canActivate: [authGuard, adminGuard],
         loadComponent: () => import('./upload-document/upload-document').then(m => m.UploadDocument),
     },
     {

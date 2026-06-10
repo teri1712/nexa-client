@@ -4,54 +4,19 @@
 //
 // As an admin, I want to sign in with my username and password
 // so that I can manage company resources.
-//
-// As a user, I want to sign in with my Google account
-// so that I can access the application.
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('Login', () => {
     beforeEach(() => {
         cy.clearLocalStorage();
-        // Block the real Google GSI script so it cannot overwrite our stub
-        cy.intercept('GET', 'https://accounts.google.com/gsi/client', {body: ''});
-        cy.visit('/auth/login', {
-            onBeforeLoad(win) {
-                (win as any).google = {
-                    accounts: {
-                        id: {
-                            initialize(cfg: { callback: (r: { credential: string }) => void }) {
-                                (win as any).__googleCallback = cfg.callback;
-                            },
-                            renderButton(el: HTMLElement) {
-                                el.innerHTML = '<span style="pointer-events:none">Sign in with Google</span>';
-                                el.style.cssText = 'cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:40px;';
-                                el.addEventListener('click', () => {
-                                    (win as any).__googleCallback?.({credential: 'fakeIdToken'});
-                                });
-                            },
-                            prompt() {
-                            },
-                        },
-                    },
-                };
-            }
-        });
+        cy.visit('/auth/login');
     });
 
-    describe('Navigating login options', () => {
-        it('an admin can open the admin sign-in form by clicking "Sign in as Admin"', () => {
-            cy.contains('Sign in as Admin').click();
-            cy.contains('Admin Sign in').should('be.visible');
+    describe('Admin Access', () => {
+        it('an admin can see the admin sign-in form by default', () => {
+            cy.contains('Admin Access').should('be.visible');
             cy.get('#username').should('be.visible');
             cy.get('#password').should('be.visible');
-        });
-
-        it('can go back to the Google sign-in view after opening the admin form', () => {
-            cy.contains('Sign in as Admin').click();
-            cy.contains('Admin Sign in').should('be.visible');
-
-            cy.get('.back-link').click();
-            cy.contains('Google').should('be.visible');
         });
     })
 
@@ -60,25 +25,14 @@ describe('Login', () => {
             cy.fixture('login-success').then(data => {
                 cy.intercept('POST', '**/login', {statusCode: 200, body: data});
             })
-
-            cy.fixture('user-login-success').then(data => {
-                cy.intercept('POST', '**/user-login', {statusCode: 200, body: data});
-            })
         })
         it('should be taken to their dashboard page after signing in with correct credentials', () => {
-            cy.contains('Sign in as Admin').click();
             cy.get('#username').type('superadmin');
             cy.get('#password').type('superadmin123');
             cy.contains('Sign In').click();
 
             cy.url().should('include', '/dashboard');
             cy.contains('Super Admin').should('be.visible');
-        })
-        it('should be taken to the dashboard after granting consent from google', () => {
-            cy.get('#google-signin-btn').click()
-            cy.url().should('include', '/dashboard');
-
-            cy.contains('user1234').should('be.visible');
         })
     })
 
@@ -89,7 +43,6 @@ describe('Login', () => {
                     req.reply({statusCode: 401, body: data});
                 });
             })
-            cy.contains('Sign in as Admin').click();
             cy.get('#username').type('superadmin');
             cy.get('#password').type('wrongpassword');
             cy.contains('Sign In').click();
@@ -105,7 +58,6 @@ describe('Login', () => {
                     req.reply({statusCode: 401, body: data});
                 })
             })
-            cy.contains('Sign in as Admin').click();
             cy.get('#username').type('no_such_user');
             cy.get('#password').type('anypassword');
             cy.contains('Sign In').click();
@@ -118,7 +70,6 @@ describe('Login', () => {
 
     describe('Validations', () => {
         it('should shows a validation error when the username is too short', () => {
-            cy.contains('Sign in as Admin').click();
             cy.get('#username').type('ab');
             cy.get('#password').type('somepass');
             cy.contains('Sign In').click();
@@ -128,4 +79,3 @@ describe('Login', () => {
     })
 
 });
-

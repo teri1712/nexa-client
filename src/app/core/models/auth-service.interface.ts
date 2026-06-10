@@ -8,8 +8,6 @@ import {AdminLoginRequest, ProfileResponse, SignUpRequest} from './auth.models';
  */
 export abstract class IAuthService {
 
-      abstract loginWithOidc(idToken: string): Observable<ProfileResponse>;
-
       abstract loginWithCredentials(credentials: AdminLoginRequest): Observable<ProfileResponse>;
 
       abstract registerAdmin(data: SignUpRequest): Observable<ProfileResponse>;

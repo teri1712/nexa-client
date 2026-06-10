@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal,} from '@angular/core';
+import {Component, computed, effect, inject, OnInit, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
 import {MatCardModule} from '@angular/material/card';
@@ -14,6 +14,7 @@ import {ProfileService} from '../../core/services/profile.service';
 import {IAuthService} from '../../core/models/auth-service.interface';
 import {ProblemDetail} from '../../core/models/auth.models';
 import {IProfileStore} from "../../core/models/token-store.interface";
+import {rxResource} from "@angular/core/rxjs-interop";
 
 type Tab = 'profile' | 'security';
 
@@ -39,7 +40,9 @@ export class ProfileComponent implements OnInit {
     private readonly profileService = inject(ProfileService);
     private readonly authService = inject(IAuthService);
     readonly isAdmin = inject(IProfileStore).isAdmin
-    protected profile = this.profileService.getFreshProfile()
+    protected readonly profileResource = rxResource({
+        stream: () => this.profileService.getFreshProfile()
+    });
     protected readonly activeTab = signal<Tab>('profile');
     protected readonly isProfileLoading = signal(false);
     protected readonly isPasswordLoading = signal(false);
@@ -50,7 +53,7 @@ export class ProfileComponent implements OnInit {
 
 
     protected readonly avatarInitials = computed(() => {
-        const name = this.profile()?.name ?? '';
+        const name = this.profileResource.value()?.name ?? '';
         return name
             .split(' ')
             .map(w => w[0])
@@ -80,15 +83,20 @@ export class ProfileComponent implements OnInit {
         return 'Female';
     });
 
+    constructor() {
+        effect(() => {
+            const p = this.profileResource.value();
+            if (p) {
+                this.profileForm.patchValue({
+                    name: p.name,
+                    gender: this.parseGender(p.gender),
+                    dob: p.dob ? p.dob.substring(0, 10) : null,
+                });
+            }
+        });
+    }
+
     ngOnInit(): void {
-        const p = this.profile();
-        if (p) {
-            this.profileForm.patchValue({
-                name: p.name,
-                gender: this.parseGender(p.gender),
-                dob: p.dob ? p.dob.substring(0, 10) : null,
-            });
-        }
     }
 
     protected setTab(tab: Tab): void {

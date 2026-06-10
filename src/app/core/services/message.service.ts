@@ -13,8 +13,9 @@ export interface MessageAccepted {
 export class MessageService {
     private readonly http = inject(HttpClient);
 
-    send(message: string) {
-        const params = new HttpParams().set('message', message);
+    send(message: string, docId?: string) {
+        let params = new HttpParams().set('message', message);
+        if (docId) params = params.set('docId', docId);
         return this.http.post<MessageAccepted>(environment.apiUrl + `/messages`, params, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -22,7 +23,9 @@ export class MessageService {
         });
     }
 
-    list(anchor?: Message) {
-        return this.http.get<Message[]>(environment.apiUrl + `/messages?anchorSeq=${anchor?.sequenceNumber ?? Number.MAX_SAFE_INTEGER}`);
+    list(anchor?: Message, docId?: string) {
+        let params = new HttpParams().set('anchorSeq', anchor?.sequenceNumber ?? Number.MAX_SAFE_INTEGER);
+        if (docId) params = params.set('docId', docId);
+        return this.http.get<Message[]>(environment.apiUrl + `/messages`, {params});
     }
 }

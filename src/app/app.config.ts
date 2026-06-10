@@ -1,5 +1,5 @@
 import {ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection,} from '@angular/core';
-import {provideRouter, withComponentInputBinding} from '@angular/router';
+import {provideRouter, withComponentInputBinding, withRouterConfig} from '@angular/router';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
@@ -15,7 +15,9 @@ export const appConfig: ApplicationConfig = {
         provideBrowserGlobalErrorListeners(),
         provideZonelessChangeDetection(),
         provideAnimationsAsync(),
-        provideRouter(routes, withComponentInputBinding()),
+        provideRouter(routes, withComponentInputBinding(), withRouterConfig({
+            onSameUrlNavigation: 'reload'
+        })),
         provideHttpClient(withInterceptors([authInterceptor])),
         // AuthService extends TokenStore — it is the single owner of session state.
         // All three tokens resolve to the same AuthService singleton.

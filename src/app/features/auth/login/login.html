@@ -33,8 +33,8 @@
 
             <div class="form-card">
                 <div class="form-header">
-                    <h2 class="form-title">Welcome back</h2>
-                    <p class="form-subtitle">Please sign in to your account</p>
+                    <h2 class="form-title">Admin Access</h2>
+                    <p class="form-subtitle">Please sign in with your admin credentials</p>
                 </div>
 
                 <!-- Error banner -->
@@ -45,95 +45,58 @@
                     </div>
                 }
 
-                <!-- Google Sign-In section -->
-                @if (!showAdminForm()) {
-                    <div class="auth-section">
-                        @if (isGoogleLoading()) {
-                            <div class="loading-row">
-                                <mat-spinner diameter="20"></mat-spinner>
-                                <span>Signing you in…</span>
-                            </div>
-                        } @else {
-                            <div id="google-signin-btn" class="google-btn-wrapper">
-                                @if (!googleScriptReady()) {
-                                    <div class="google-fallback">
-                                        <mat-spinner diameter="16"></mat-spinner>
-                                        Connecting to Google…
-                                    </div>
-                                }
-                            </div>
-                        }
-
-                        <div class="divider"><span>or sign in as admin</span></div>
-
-                        <button class="custom-secondary-btn" type="button" (click)="toggleAdminForm()">
-                            Sign in as Admin
-                            <mat-icon>arrow_forward</mat-icon>
-                        </button>
-                    </div>
-                }
-
                 <!-- Admin login form -->
-                @if (showAdminForm()) {
-                    <div class="admin-section" [@fadeIn]>
-                        <button class="back-link" type="button" (click)="toggleAdminForm()">
-                            <mat-icon>arrow_back</mat-icon>
-                            Back to Google
+                <div class="admin-section">
+                    <form [formGroup]="adminForm" (ngSubmit)="submitAdminLogin()" novalidate>
+                        <div class="custom-field">
+                            <label for="username">Username</label>
+                            <div class="input-wrapper" [class.error]="usernameCtrl.invalid && usernameCtrl.touched">
+                                <mat-icon>person_outline</mat-icon>
+                                <input
+                                        id="username"
+                                        formControlName="username"
+                                        autocomplete="username"
+                                        placeholder="Enter your username"
+                                />
+                            </div>
+                            @if (usernameCtrl.touched && usernameCtrl.errors?.['required']) {
+                                <span class="error-text">Username is required.</span>
+                            } @else if (usernameCtrl.touched && usernameCtrl.errors?.['minlength']) {
+                                <span class="error-text">Minimum 5 characters.</span>
+                            }
+                        </div>
+
+                        <div class="custom-field">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper" [class.error]="passwordCtrl.invalid && passwordCtrl.touched">
+                                <mat-icon>lock_outline</mat-icon>
+                                <input
+                                        id="password"
+                                        type="password"
+                                        formControlName="password"
+                                        autocomplete="current-password"
+                                        placeholder="Enter your password"
+                                />
+                            </div>
+                            @if (passwordCtrl.touched && passwordCtrl.errors?.['required']) {
+                                <span class="error-text">Password is required.</span>
+                            }
+                        </div>
+
+                        <button
+                                class="custom-primary-btn full-width"
+                                type="submit"
+                                [disabled]="isAdminLoading()"
+                        >
+                            @if (isAdminLoading()) {
+                                <mat-spinner diameter="18"></mat-spinner>
+                                <span>Verifying…</span>
+                            } @else {
+                                <span>Sign In</span>
+                            }
                         </button>
-                        
-                        <h3 class="admin-title">Admin Sign in</h3>
-
-                        <form [formGroup]="adminForm" (ngSubmit)="submitAdminLogin()" novalidate>
-                            <div class="custom-field">
-                                <label for="username">Username</label>
-                                <div class="input-wrapper" [class.error]="usernameCtrl.invalid && usernameCtrl.touched">
-                                    <mat-icon>person_outline</mat-icon>
-                                    <input
-                                            id="username"
-                                            formControlName="username"
-                                            autocomplete="username"
-                                            placeholder="Enter your username"
-                                    />
-                                </div>
-                                @if (usernameCtrl.touched && usernameCtrl.errors?.['required']) {
-                                    <span class="error-text">Username is required.</span>
-                                } @else if (usernameCtrl.touched && usernameCtrl.errors?.['minlength']) {
-                                    <span class="error-text">Minimum 5 characters.</span>
-                                }
-                            </div>
-
-                            <div class="custom-field">
-                                <label for="password">Password</label>
-                                <div class="input-wrapper" [class.error]="passwordCtrl.invalid && passwordCtrl.touched">
-                                    <mat-icon>lock_outline</mat-icon>
-                                    <input
-                                            id="password"
-                                            type="password"
-                                            formControlName="password"
-                                            autocomplete="current-password"
-                                            placeholder="Enter your password"
-                                    />
-                                </div>
-                                @if (passwordCtrl.touched && passwordCtrl.errors?.['required']) {
-                                    <span class="error-text">Password is required.</span>
-                                }
-                            </div>
-
-                            <button
-                                    class="custom-primary-btn full-width"
-                                    type="submit"
-                                    [disabled]="isAdminLoading()"
-                            >
-                                @if (isAdminLoading()) {
-                                    <mat-spinner diameter="18"></mat-spinner>
-                                    <span>Verifying…</span>
-                                } @else {
-                                    <span>Sign In</span>
-                                }
-                            </button>
-                        </form>
-                    </div>
-                }
+                    </form>
+                </div>
             </div>
             
             <div class="login-footer">

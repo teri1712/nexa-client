@@ -101,7 +101,7 @@
   padding: 1rem 0;
   display: flex;
   flex-direction: column;
-  
+
   /* Scrollbar Styling */
   &::-webkit-scrollbar {
     width: 6px;
@@ -125,7 +125,7 @@
   justify-content: center;
   gap: 4px;
   padding: 1rem;
-  
+
   .typing-dot {
     width: 6px;
     height: 6px;
@@ -151,7 +151,7 @@
 .typing-loader {
   display: flex;
   gap: 4px;
-  
+
   span {
     width: 6px;
     height: 6px;
@@ -184,7 +184,7 @@
   color: var(--mat-sys-error);
 
   mat-icon { font-size: 16px; width: 16px; height: 16px; }
-  
+
   .error-text {
     font-size: 0.75rem;
     font-weight: 600;
@@ -268,9 +268,9 @@
   transition: all var(--app-transition-fast);
   padding: 0;
 
-  mat-icon { 
-    font-size: 20px; 
-    width: 20px; 
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
     height: 20px;
     display: flex;
     align-items: center;
@@ -280,8 +280,13 @@
   &.send-btn {
     background: var(--app-gradient-primary);
     color: white;
-    
+
+    mat-icon {
+      transform: translateX(1px); // Optical adjustment for 'send' icon
+    }
+
     &:disabled {
+
       background: var(--mat-sys-surface-container-high);
       color: var(--mat-sys-on-surface-variant);
       cursor: not-allowed;
@@ -298,7 +303,7 @@
   &.stop-btn {
     background: var(--mat-sys-error-container);
     color: var(--mat-sys-error);
-    
+
     &:hover {
       background: var(--mat-sys-error);
       color: white;

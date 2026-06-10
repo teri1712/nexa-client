@@ -1,4 +1,4 @@
-import {Component, computed, effect, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, input, signal, untracked, viewChild} from '@angular/core';
 import {MessageService} from "../../core/services/message.service";
 import {Message} from "../../core/models/message.models";
 import {MessageComponent} from "../message/message.component";
@@ -16,7 +16,7 @@ import {map, timer} from "rxjs";
     templateUrl: './message-list.component.html',
     styleUrl: './message-list.component.scss',
 })
-export class MessageListComponent implements OnInit {
+export class MessageListComponent {
     private messages = signal<Message[]>([]);
     private sendingMessage = signal<SendingMessage | undefined>(undefined);
     private placeholderMessage = signal<Message | undefined>(undefined);
@@ -26,6 +26,8 @@ export class MessageListComponent implements OnInit {
 
     private messagesArea = viewChild<ElementRef<HTMLElement>>('messagesArea');
     private isAtBottom = true;
+
+    docId = input<string>();
 
     displayMessages = computed(() => {
         let messages = this.messages();
@@ -49,11 +51,23 @@ export class MessageListComponent implements OnInit {
     private botService = inject(BotService);
 
     constructor() {
+        effect(() => {
+            this.docId();
+            untracked(() => {
+                this.messages.set([]);
+                this.sendingMessage.set(undefined);
+                this.placeholderMessage.set(undefined);
+                this.end.set(false);
+                this.loadingTrigger.set(true);
+            });
+        });
+
         effect((onCleanup) => {
             if (this.loading()) {
                 const snapshot = this.messages();
                 const first = snapshot.at(0);
-                const sub = this.messageService.list(first)
+                const docId = this.docId();
+                const sub = this.messageService.list(first, docId)
                     .pipe(map(messages => messages.reverse()))
                     .subscribe({
                         next: messages => {
@@ -117,7 +131,8 @@ export class MessageListComponent implements OnInit {
             const sending = this.sendingMessage();
             if (sending?.status === 'sending') {
                 const message = sending.content
-                const sub = this.messageService.send(message)
+                const docId = this.docId();
+                const sub = this.messageService.send(message, docId)
                     .subscribe({
                         next: (res) => {
                             const sent = res.userMessage
@@ -145,10 +160,6 @@ export class MessageListComponent implements OnInit {
             const el = this.messagesArea()?.nativeElement;
             if (el) el.scrollTop = el.scrollHeight;
         });
-    }
-
-    ngOnInit() {
-        this.loadingTrigger.set(true);
     }
 
     isSendingMessage(msg: Message): msg is SendingMessage {

@@ -4,7 +4,6 @@ import {IProfileStore, ITokenStore} from '../models/token-store.interface';
 
 const KEYS = {
     ACCESS: 'nexa_access_token',
-    REFRESH: 'nexa_refresh_token',
     PROFILE: 'nexa_profile',
 } as const;
 
@@ -21,7 +20,6 @@ export class TokenStore implements ITokenStore, IProfileStore {
 
     storeSession(profile: ProfileResponse, tokens: AccessToken): void {
         localStorage.setItem(KEYS.ACCESS, tokens.accessToken);
-        localStorage.setItem(KEYS.REFRESH, tokens.refreshToken);
         localStorage.setItem(KEYS.PROFILE, JSON.stringify(profile));
         this._profile.set(profile);
         this._sessionExpired.set(false);
@@ -43,17 +41,12 @@ export class TokenStore implements ITokenStore, IProfileStore {
         this._sessionExpired.set(false);
     }
 
-    /** Signal that the server-side session is gone (refresh token invalidated). */
     markSessionExpired(): void {
         this._sessionExpired.set(true);
     }
 
     getAccessToken(): string | null {
         return localStorage.getItem(KEYS.ACCESS);
-    }
-
-    getRefreshToken(): string | null {
-        return localStorage.getItem(KEYS.REFRESH);
     }
 
     private _loadProfile(): ProfileResponse | null {

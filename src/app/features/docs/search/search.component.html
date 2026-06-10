@@ -1,5 +1,4 @@
 <div class="search-page" [class.has-results]="results.value()">
-
     <!-- Hero / Search Hub -->
     <div class="search-hero">
         <div class="hero-brand">
@@ -12,12 +11,12 @@
         <div class="search-container">
             <div class="custom-search-bar">
                 <mat-icon class="search-icon">search</mat-icon>
-                <input 
-                    id="search-input" 
-                    [formControl]="queryString"
-                    (keyup.enter)="onQueryButtonClick()" 
-                    placeholder="Search documents, reports, or policies..."
-                    autocomplete="off"
+                <input
+                        id="search-input"
+                        [formControl]="queryString"
+                        (keyup.enter)="onQueryButtonClick()"
+                        placeholder="Search documents, reports, or policies..."
+                        autocomplete="off"
                 />
                 <div class="search-actions">
                     @if (queryString.value) {
@@ -26,7 +25,12 @@
                         </button>
                     }
                     <div class="search-divider"></div>
-                    <select class="type-dropdown" id="type-select" [ngModel]="type()" (ngModelChange)="type.set($event)">
+                    <select
+                            class="type-dropdown"
+                            id="type-select"
+                            [ngModel]="type()"
+                            (ngModelChange)="type.set($event)"
+                    >
                         <option value="">All Types</option>
                         <option value="PDF">PDF</option>
                         <option value="DOCX">DOCX</option>
@@ -36,27 +40,30 @@
                     </button>
                 </div>
             </div>
-            
+
             @if (queryString.touched && queryString.errors?.['required']) {
-                <p class="error-text" style="text-align: center; margin-top: 0.5rem;">Query is required</p>
+                <p class="error-text" style="text-align: center; margin-top: 0.5rem">Query is required</p>
             }
-            
+
             <!-- Quick Filters / Suggestions -->
-            @if (!results.value() && !results.isLoading()) {
+            @if (!results.value() && !results.isLoading() && faqs.value()) {
                 <div class="quick-access">
-                    <span class="label">Quick Access:</span>
-                    <button class="chip" (click)="queryString.setValue('Annual Report')">Annual Reports</button>
-                    <button class="chip" (click)="queryString.setValue('Security Policy')">Security Policies</button>
-                    <button class="chip" (click)="queryString.setValue('Onboarding')">Onboarding</button>
+                    <span class="label">Trending FAQs</span>
+                    @for (faq of faqs.value(); track faq.question) {
+                        <button class="chip" (click)="onFaqClick(faq.question)">{{ faq.question }}</button>
+                    }
                 </div>
             }
         </div>
     </div>
 
     <!-- Results Section -->
-    @if (results.isLoading() || results.value() || results.error() || suggestions.isLoading() || suggestions.value()) {
+    @if (results.isLoading() ||
+    results.value() ||
+    results.error() ||
+    suggestions.isLoading() ||
+    suggestions.value()) {
         <div class="results-layout">
-            
             <!-- AI Insight Panel -->
             @if (suggestions.isLoading() || suggestions.value()) {
                 <div class="insight-panel">
@@ -67,7 +74,7 @@
                         </div>
                         <div class="insight-badge">Powered by Nexa AI</div>
                     </div>
-                    
+
                     <div class="insight-content">
                         @if (suggestions.isLoading()) {
                             <div id="suggestion-spinner" class="skeleton-loader">
@@ -120,9 +127,12 @@
 
                         <div id="results-list" class="doc-list">
                             @for (doc of page.docs; track doc.id) {
-                                <a class="doc-item" [attr.data-doc-id]="doc.id" [routerLink]="'/docs/'+ doc.id">
+                                <a class="doc-item" [attr.data-doc-id]="doc.id" [routerLink]="'/docs/' + doc.id">
                                     <div class="doc-icon-wrapper" [attr.data-type]="doc.fileType">
-                                        <mat-icon>{{ doc.fileType === 'PDF' ? 'picture_as_pdf' : 'description' }}</mat-icon>
+                                        <mat-icon>{{
+                                                doc.fileType === 'PDF' ? 'picture_as_pdf' : 'description'
+                                            }}
+                                        </mat-icon>
                                     </div>
                                     <div class="doc-info">
                                         <h3 class="doc-title">{{ doc.title }}</h3>
@@ -130,7 +140,7 @@
                                         <div class="doc-meta">
                                             <span class="doc-type">{{ doc.fileType }}</span>
                                             <span class="doc-dot">&middot;</span>
-                                            <span class="doc-date">{{ doc.createdAt | date:'mediumDate' }}</span>
+                                            <span class="doc-date">{{ doc.createdAt | date: 'mediumDate' }}</span>
                                         </div>
                                     </div>
                                     <mat-icon class="doc-arrow">chevron_right</mat-icon>
@@ -139,16 +149,19 @@
                         </div>
 
                         <div class="pagination-footer">
-                            <button id="next-page-btn" class="custom-secondary-btn" (click)="onNextPage()">Load More Results</button>
+                            <button id="next-page-btn" class="custom-secondary-btn" (click)="onNextPage()">
+                                Load More Results
+                            </button>
                         </div>
                     }
                 }
             </div>
         </div>
     }
-
 </div>
 
-<a class="add-doc-fab" routerLink="/docs/new" title="Upload Document">
-    <mat-icon>add</mat-icon>
-</a>
+@if (profileStore.isAdmin()) {
+    <a class="add-doc-fab" routerLink="/docs/new" title="Upload Document">
+        <mat-icon>add</mat-icon>
+    </a>
+}

@@ -10,11 +10,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
+import {BotBubbleComponent} from "../../agent-bubble/bot-bubble.component";
 
 @Component({
     selector: 'app-document',
     standalone: true,
-    imports: [MatCardModule, MatChipsModule, DatePipe, MatButtonModule, RouterLink, MatProgressSpinner, MatIconModule, MatDividerModule],
+    imports: [MatCardModule, MatChipsModule, DatePipe, MatButtonModule, RouterLink, MatProgressSpinner, MatIconModule, MatDividerModule, BotBubbleComponent],
     templateUrl: './document.component.html',
     styleUrl: './document.component.scss',
 })
