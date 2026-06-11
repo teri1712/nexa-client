@@ -19,7 +19,8 @@ import {MatListModule} from '@angular/material/list';
 import {MatRippleModule} from '@angular/material/core';
 import {IProfileStore} from '../../../core/models/token-store.interface';
 import {catchError, map, of, startWith, switchMap} from "rxjs";
-import {parseSuggestion} from "./suggestion-parser";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {marked} from 'marked';
 
 @Component({
     selector: 'app-search',
@@ -45,6 +46,7 @@ import {parseSuggestion} from "./suggestion-parser";
 })
 export class SearchComponent {
     queryString = new FormControl('', Validators.required);
+    private readonly sanitizer = inject(DomSanitizer);
 
     private readonly pageIndex = signal<DocItem | undefined>(undefined);
     query = signal<string>('');
@@ -110,9 +112,13 @@ export class SearchComponent {
         error: () => this.suggestionsState().error
     };
 
-    formattedSuggestion = computed(() => {
+    formattedSuggestion = computed<SafeHtml>(() => {
         const val = this.suggestions.value();
-        return val ? parseSuggestion(val) : [];
+        if (!val) return '';
+
+        // Pure, standard marked parsing with no pre-processing
+        const html = marked.parse(val) as string;
+        return this.sanitizer.bypassSecurityTrustHtml(html);
     });
 
     faqService = inject(FaqService);

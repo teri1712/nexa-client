@@ -123,7 +123,7 @@
   display: flex;
   border-radius: 50%;
   transition: all var(--app-transition-fast);
-  
+
   &:hover {
     background: var(--mat-sys-surface-container-high);
     color: var(--mat-sys-primary);
@@ -275,23 +275,32 @@
 .insight-content {
   padding: 2rem;
 
-  .suggestion-text {
+  .markdown-content {
     margin: 0;
     line-height: 1.8;
     color: var(--mat-sys-on-surface);
     font-size: 1.0625rem;
     font-weight: 400;
-    white-space: pre-wrap;
 
-    .text-segment {
-      display: inline;
-      
-      &.is-bold {
+    ::ng-deep {
+      p {
+        margin: 1rem 0;
+      }
+
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
         font-weight: 700;
         color: var(--mat-sys-primary);
       }
 
-      &.is-code {
+      code {
         font-family: 'JetBrains Mono', 'Fira Code', monospace;
         background: var(--mat-sys-surface-container-high);
         color: #e11d48;
@@ -300,114 +309,69 @@
         font-size: 0.9em;
         border: 1px solid var(--mat-sys-outline-variant);
       }
-    }
 
-    .suggestion-header {
-      color: var(--mat-sys-on-surface);
-      margin: 1.5rem 0 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      letter-spacing: -0.01em;
+      h1, h2, h3 {
+        color: var(--mat-sys-on-surface);
+        margin: 2rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        letter-spacing: -0.02em;
 
-      &[data-level="1"] {
-        font-size: 1.5rem;
+        &::before {
+          content: '';
+          width: 4px;
+          height: 1.25rem;
+          background: var(--app-gradient-primary);
+          border-radius: 2px;
+        }
+      }
+
+      h1 {
+        font-size: 1.6rem;
         font-weight: 800;
         border-bottom: 2px solid var(--mat-sys-outline-variant);
         padding-bottom: 0.5rem;
-        width: 100%;
+        margin-top: 1rem;
       }
 
-      &[data-level="2"] {
-        font-size: 1.25rem;
+      h2 {
+        font-size: 1.35rem;
         font-weight: 800;
       }
 
-      &[data-level="3"] {
-        font-size: 1.125rem;
+      h3 {
+        font-size: 1.15rem;
         font-weight: 700;
         color: var(--mat-sys-on-surface-variant);
       }
 
-      &::before {
-        content: '';
-        width: 4px;
-        height: 1.25rem;
-        background: var(--app-gradient-primary);
-        border-radius: 2px;
-      }
-    }
-
-    .suggestion-bullet {
-      display: flex;
-      gap: 0.75rem;
-      margin: 0.5rem 0;
-      padding-left: 1rem;
-
-      .bullet-dot {
-        color: var(--mat-sys-primary);
-        font-weight: 800;
-        line-height: 1.8;
-      }
-
-      .bullet-content {
-        flex: 1;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0 4px;
-      }
-    }
-
-    .pasted-content-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 1rem;
-      background: var(--mat-sys-surface-container-high);
-      border: 1px dashed var(--mat-sys-outline-variant);
-      border-radius: 12px;
-      padding: 0.75rem 1.25rem;
-      margin: 1rem 0;
-      transition: all var(--app-transition-base);
-      box-shadow: var(--app-shadow-sm);
-      cursor: default;
-
-      &:hover {
-        border-color: var(--mat-sys-primary);
-        background: var(--mat-sys-surface-container-highest);
-        transform: translateY(-2px);
-        box-shadow: var(--app-shadow-md);
-      }
-
-      mat-icon {
-        color: var(--mat-sys-primary);
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
-      }
-
-      .badge-info {
+      ul, ol {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
         display: flex;
         flex-direction: column;
-        gap: 0.125rem;
+        gap: 0.5rem;
       }
 
-      .label {
-        font-size: 0.75rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--mat-sys-on-surface-variant);
+      li {
+        &::marker {
+          color: var(--mat-sys-primary);
+          font-weight: 800;
+        }
       }
 
-      .count {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--mat-sys-primary);
+      hr {
+        border: none;
+        height: 1px;
+        background: var(--mat-sys-outline-variant);
+        margin: 2rem 0;
+        opacity: 0.6;
       }
     }
   }
 }
+
 
 /* ── Doc Results ── */
 .results-header {
@@ -587,17 +551,20 @@
     color: var(--mat-sys-on-surface);
   }
 
-  p { 
+  p {
     font-size: 1.0625rem;
-    margin: 0; 
+    margin: 0;
   }
 
   &.error {
     background: rgba(239, 68, 68, 0.05);
     border-color: rgba(239, 68, 68, 0.2);
     color: var(--mat-sys-on-error-container);
-    
-    mat-icon { opacity: 0.8; color: #ef4444; }
+
+    mat-icon {
+      opacity: 0.8;
+      color: #ef4444;
+    }
   }
 }
 
@@ -649,8 +616,13 @@
   background-size: 500px 100%;
   animation: shimmer 2s infinite linear;
 
-  &.wide { width: 100%; }
-  &.medium { width: 70%; }
+  &.wide {
+    width: 100%;
+  }
+
+  &.medium {
+    width: 70%;
+  }
 }
 
 .results-skeleton {
@@ -668,20 +640,45 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -500px 0; }
-  100% { background-position: 500px 0; }
+  0% {
+    background-position: -500px 0;
+  }
+  100% {
+    background-position: 500px 0;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 600px) {
-  .search-hero { padding-top: 80px; }
-  .search-logo { font-size: 3rem; }
-  .custom-search-bar { padding: 0.5rem 0.5rem 0.5rem 1.25rem; }
-  .search-btn span { display: none; }
-  .search-btn { width: 48px; padding: 0; }
-  .search-btn::before { content: '\e8b6'; font-family: 'Material Icons'; font-size: 24px; }
+  .search-hero {
+    padding-top: 80px;
+  }
+  .search-logo {
+    font-size: 3rem;
+  }
+  .custom-search-bar {
+    padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  }
+  .search-btn span {
+    display: none;
+  }
+  .search-btn {
+    width: 48px;
+    padding: 0;
+  }
+  .search-btn::before {
+    content: '\e8b6';
+    font-family: 'Material Icons';
+    font-size: 24px;
+  }
 }
