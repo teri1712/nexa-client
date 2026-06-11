@@ -242,6 +242,7 @@
     resize: none;
     max-height: 120px;
     font-family: inherit;
+    overflow: hidden;
 
     &::placeholder {
       color: var(--mat-sys-on-surface-variant);

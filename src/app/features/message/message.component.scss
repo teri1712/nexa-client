@@ -12,13 +12,14 @@
 
     .bubble-content {
       background: var(--mat-sys-primary);
-      color: var(--mat-sys-on-primary, #ffffff);
+      color: var(--mat-sys-on-primary);
       border-radius: 20px 20px 4px 20px;
       box-shadow: 0 4px 12px rgba(var(--mat-sys-primary-rgb, 37, 99, 235), 0.2);
     }
 
     .time {
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--mat-sys-on-primary);
+      opacity: 0.7;
     }
   }
 
@@ -31,6 +32,7 @@
       border-radius: 20px 20px 20px 4px;
       border: 1px solid var(--mat-sys-outline-variant);
       position: relative;
+      max-width: 85%;
       
       // Insight gradient indicator for Bot/AI
       &::before {
@@ -72,7 +74,56 @@
   font-size: 0.9375rem;
   line-height: 1.5;
   word-break: break-word;
-  white-space: pre-wrap;
+}
+
+.markdown-body {
+  ::ng-deep {
+    p { margin: 0 0 0.75rem 0; }
+    p:last-child { margin-bottom: 0; }
+    
+    ul, ol {
+      margin: 0.5rem 0;
+      padding-left: 1.25rem;
+    }
+    
+    li { margin-bottom: 0.25rem; }
+    
+    strong {
+      color: var(--mat-sys-primary);
+      font-weight: 700;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      background: var(--mat-sys-surface-container-high);
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    pre {
+      background: var(--mat-sys-surface-container-high);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 0.5rem 0;
+      
+      code {
+        background: transparent;
+        padding: 0;
+      }
+    }
+    
+    h1, h2, h3 {
+      margin: 1rem 0 0.5rem 0;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    
+    h1 { font-size: 1.25rem; }
+    h2 { font-size: 1.125rem; }
+    h3 { font-size: 1rem; }
+  }
 }
 
 .time {
