@@ -76,8 +76,45 @@
                             <div class="skeleton-line medium"></div>
                             <div class="skeleton-line wide"></div>
                         </div>
-                    } @else if (suggestions.value(); as suggestion) {
-                        <p id="suggestion-box" class="suggestion-text">{{ suggestion }}</p>
+                    } @else if (formattedSuggestion().length > 0) {
+                        <div id="suggestion-box" class="suggestion-text">
+                            @for (segment of formattedSuggestion(); track $index) {
+                                @if (segment.type === 'text') {
+                                    <span class="text-segment" [class.is-bold]="segment.bold" [class.is-code]="segment.code">{{ segment.content }}</span>
+                                } @else if (segment.type === 'header') {
+                                    <h2 class="suggestion-header" [attr.data-level]="segment.level">
+                                        {{ segment.content }}
+                                    </h2>
+                                } @else if (segment.type === 'bullet') {
+                                    <div class="suggestion-bullet">
+                                        <span class="bullet-dot">&bull;</span>
+                                        <div class="bullet-content">
+                                            @for (sub of segment.segments; track $index) {
+                                                @if (sub.type === 'text') {
+                                                    <span class="text-segment" [class.is-bold]="sub.bold" [class.is-code]="sub.code">{{ sub.content }}</span>
+                                                } @else if (sub.type === 'pasted') {
+                                                    <div class="pasted-content-badge">
+                                                        <mat-icon>content_paste</mat-icon>
+                                                        <div class="badge-info">
+                                                            <span class="label">Pasted Content</span>
+                                                            <span class="count">{{ sub.count }} characters</span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                } @else if (segment.type === 'pasted') {
+                                    <div class="pasted-content-badge">
+                                        <mat-icon>content_paste</mat-icon>
+                                        <div class="badge-info">
+                                            <span class="label">Pasted Content</span>
+                                            <span class="count">{{ segment.count }} characters</span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
                     } @else if (suggestions.error()) {
                         <p class="error-text">Failed to generate AI overview.</p>
                     }

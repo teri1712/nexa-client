@@ -19,6 +19,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatRippleModule} from '@angular/material/core';
 import {IProfileStore} from '../../../core/models/token-store.interface';
 import {catchError, map, of, startWith, switchMap} from "rxjs";
+import {parseSuggestion} from "./suggestion-parser";
 
 @Component({
     selector: 'app-search',
@@ -108,6 +109,11 @@ export class SearchComponent {
         isLoading: () => this.suggestionsState().isLoading,
         error: () => this.suggestionsState().error
     };
+
+    formattedSuggestion = computed(() => {
+        const val = this.suggestions.value();
+        return val ? parseSuggestion(val) : [];
+    });
 
     faqService = inject(FaqService);
     protected readonly profileStore = inject(IProfileStore);
