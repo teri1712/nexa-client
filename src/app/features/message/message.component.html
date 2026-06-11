@@ -1,6 +1,10 @@
 <div class="message-bubble" [class.mine]="message()?.mine" [class.bot]="!message()?.mine">
   <div class="bubble-content">
-    <span class="content">{{ message()?.content }}</span>
+    @if (message()?.mine) {
+      <span class="content">{{ formattedContent() }}</span>
+    } @else {
+      <div class="content markdown-body" [innerHTML]="formattedContent()"></div>
+    }
     <span class="time">{{ message()?.createdAt | date:'shortTime' }}</span>
   </div>
 </div>

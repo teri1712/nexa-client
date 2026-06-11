@@ -1,36 +1,22 @@
-import {Component, computed, effect, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';
+import {Component, computed, effect, ElementRef, inject, input, signal, untracked, viewChild} from '@angular/core';
 import {MessageService} from "../../core/services/message.service";
 import {Message} from "../../core/models/message.models";
 import {MessageComponent} from "../message/message.component";
-import {BotService} from "../../core/services/bot.service";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
+import {FillmentService} from "../../core/services/fillment.service";
 import {MatIconModule} from "@angular/material/icon";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {map, timer} from "rxjs";
 
 @Component({
     selector: 'app-message-list',
     imports: [
         MessageComponent,
-        MatProgressSpinnerModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
         MatIconModule,
-        MatToolbarModule,
-        MatTooltipModule,
-        CdkTextareaAutosize,
     ],
-    providers: [BotService],
+    providers: [FillmentService],
     templateUrl: './message-list.component.html',
     styleUrl: './message-list.component.scss',
 })
-export class MessageListComponent implements OnInit {
+export class MessageListComponent {
     private messages = signal<Message[]>([]);
     private sendingMessage = signal<SendingMessage | undefined>(undefined);
     private placeholderMessage = signal<Message | undefined>(undefined);
@@ -40,6 +26,8 @@ export class MessageListComponent implements OnInit {
 
     private messagesArea = viewChild<ElementRef<HTMLElement>>('messagesArea');
     private isAtBottom = true;
+
+    docId = input<string>();
 
     displayMessages = computed(() => {
         let messages = this.messages();
@@ -60,24 +48,37 @@ export class MessageListComponent implements OnInit {
     message = signal('');
 
     private messageService = inject(MessageService);
-    private botService = inject(BotService);
+    private botService = inject(FillmentService);
 
     constructor() {
+        effect(() => {
+            this.docId();
+            untracked(() => {
+                this.messages.set([]);
+                this.sendingMessage.set(undefined);
+                this.placeholderMessage.set(undefined);
+                this.end.set(false);
+                this.loadingTrigger.set(true);
+            });
+        });
+
         effect((onCleanup) => {
             if (this.loading()) {
                 const snapshot = this.messages();
                 const first = snapshot.at(0);
-                const sub = this.messageService.list(first)
+                const docId = this.docId();
+                const sub = this.messageService.list(first, docId)
                     .pipe(map(messages => messages.reverse()))
                     .subscribe({
                         next: messages => {
                             this.messages.set(messages.concat(snapshot));
-                            this.end.set(messages.length === 0)
+                            if (messages.length === 0) this.end.set(true)
                             if (snapshot.length === 0) this.scrollToBottom()
                         },
                         error: (err) => {
                             console.error(err)
                             this.loadingTrigger.set(false)
+                            this.end.set(true)
                         },
                         complete: () => {
                             this.loadingTrigger.set(false);
@@ -103,6 +104,9 @@ export class MessageListComponent implements OnInit {
                             this.placeholderMessage.set(undefined);
                             this.prepend(reply)
                         },
+                        error: (err) => {
+                            console.error(err)
+                        }
                     });
                 onCleanup(() => sub.unsubscribe());
             }
@@ -125,18 +129,20 @@ export class MessageListComponent implements OnInit {
 
         effect((onCleanup) => {
             const sending = this.sendingMessage();
-            if (sending) {
+            if (sending?.status === 'sending') {
                 const message = sending.content
-                const sub = this.messageService.send(message)
+                const docId = this.docId();
+                const sub = this.messageService.send(message, docId)
                     .subscribe({
                         next: (res) => {
                             const sent = res.userMessage
                             this.prepend(sent)
 
                             this.sendingMessage.set(undefined);
-                            this.placeholderMessage.set(res.placeholderMessage)
+                            this.placeholderMessage.set(res.placeHolderMessage)
                         },
-                        error: () => {
+                        error: (err) => {
+                            console.error(err)
                             this.sendingMessage.set({...sending, status: 'error'});
                         },
                     });
@@ -154,10 +160,6 @@ export class MessageListComponent implements OnInit {
             const el = this.messagesArea()?.nativeElement;
             if (el) el.scrollTop = el.scrollHeight;
         });
-    }
-
-    ngOnInit() {
-        this.loadingTrigger.set(true);
     }
 
     isSendingMessage(msg: Message): msg is SendingMessage {

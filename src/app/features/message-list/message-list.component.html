@@ -1,64 +1,81 @@
 <div class="chat-container">
     <!-- Header -->
-    <mat-toolbar class="chat-header">
-        <mat-icon class="bot-icon">smart_toy</mat-icon>
-        <span class="bot-name">Nexa bot</span>
-    </mat-toolbar>
+    <header class="chat-header">
+        <div class="bot-info">
+            <div class="bot-status-icon">
+                <mat-icon>smart_toy</mat-icon>
+                <span class="status-dot"></span>
+            </div>
+            <div class="bot-meta">
+                <span class="bot-name">Nexa Intelligence</span>
+                <span class="bot-status">Always online</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="header-icon-btn"><mat-icon>more_vert</mat-icon></button>
+        </div>
+    </header>
 
     <!-- Loading older messages -->
     @if (loading()) {
-        <div class="load-more-spinner">
-            <mat-progress-spinner mode="indeterminate" diameter="24"/>
+        <div class="load-more-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
         </div>
     }
 
     <!-- Messages -->
     <div class="messages-area" #messagesArea (scroll)="onMessagesScroll($event)">
         <div class="top-sentinel"></div>
+        
         @for (msg of displayMessages(); track msg.sequenceNumber) {
             <app-message [message]="msg"/>
             @if (isSendingMessage(msg) && msg.status === 'error') {
                 <div class="error-row">
-                    <span class="error-text">Failed to send</span>
-                    <button mat-button color="warn" (click)="onRetryErrorMessage()">Retry</button>
+                    <mat-icon>error</mat-icon>
+                    <span class="error-text">Network failure</span>
+                    <button class="retry-btn" (click)="onRetryErrorMessage()">Retry</button>
                 </div>
             }
         }
+
         <!-- Bot typing / streaming indicator -->
         @if (cancellable()) {
             <div class="bot-typing">
-                <mat-progress-spinner mode="indeterminate" diameter="20"/>
-                <span class="bot-typing-label">Nexa bot is typing…</span>
+                <div class="typing-loader">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="bot-typing-label">Nexa is generating...</span>
             </div>
         }
     </div>
 
     <!-- Input -->
-    <div class="input-area">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="message-input">
-      <textarea matInput
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="4"
-                placeholder="Type a message..."
+    <div class="input-container">
+        <div class="input-wrapper">
+            <textarea 
+                #messageInput
                 [value]="message()"
                 [disabled]="!!cancellable()"
                 (input)="message.set($any($event.target).value)"
                 (keydown.enter)="$event.preventDefault(); onSendClicked()"
-                id="message-input">
-      </textarea>
-        </mat-form-field>
-
-        @if (cancellable()) {
-            <button mat-icon-button color="warn" (click)="onCancelClicked()" id="cancel-btn"
-                    matTooltip="Cancel">
-                <mat-icon>cancel</mat-icon>
-            </button>
-        } @else {
-            <button mat-icon-button color="primary" (click)="onSendClicked()" id="send-btn"
-                    [disabled]="!message()">
-                <mat-icon>send</mat-icon>
-            </button>
-        }
+                placeholder="Ask Nexa anything..."
+                rows="1"
+                id="message-input"
+            ></textarea>
+            
+            <div class="input-actions">
+                @if (cancellable()) {
+                    <button class="action-btn stop-btn" (click)="onCancelClicked()" id="cancel-btn" title="Stop">
+                        <mat-icon>stop_circle</mat-icon>
+                    </button>
+                } @else {
+                    <button class="action-btn send-btn" [disabled]="!message()" (click)="onSendClicked()" id="send-btn" title="Send">
+                        <mat-icon>send</mat-icon>
+                    </button>
+                }
+            </div>
+        </div>
     </div>
 </div>

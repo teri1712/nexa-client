@@ -1,11 +1,11 @@
-<div class="page">
-  <div class="page-header">
-    <h1 class="mat-headline-medium">Register New Admin</h1>
-    <p class="mat-body-medium muted">Create a new admin account. Requires an active admin session.</p>
-  </div>
+<div class="register-page">
+  <div class="register-container">
+    <div class="page-header">
+      <h1 class="page-title">Register New Admin</h1>
+      <p class="page-subtitle">Create a new administrative account for the Nexa platform.</p>
+    </div>
 
-  <mat-card>
-    <mat-card-content>
+    <div class="form-card">
       <!-- Success -->
       @if (successMessage()) {
         <div class="alert alert--success" role="status">
@@ -25,50 +25,60 @@
       <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div class="form-grid">
           <!-- Username -->
-          <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Username</mat-label>
-            <input matInput id="reg-username" formControlName="username" placeholder="5–20 chars, no spaces" autocomplete="off" />
-            @if (f['username'].errors?.['required']) {
-              <mat-error>Username is required.</mat-error>
-            } @else if (f['username'].errors?.['minlength']) {
-              <mat-error>At least 5 characters.</mat-error>
-            } @else if (f['username'].errors?.['maxlength']) {
-              <mat-error>At most 20 characters.</mat-error>
-            } @else if (f['username'].errors?.['whitespace']) {
-              <mat-error>No spaces allowed.</mat-error>
+          <div class="custom-field">
+            <label for="reg-username">Username</label>
+            <div class="input-wrapper" [class.error]="f['username'].invalid && f['username'].touched">
+              <mat-icon>person_outline</mat-icon>
+              <input id="reg-username" formControlName="username" placeholder="e.g. jdoe_admin" autocomplete="off" />
+            </div>
+            @if (f['username'].touched && f['username'].errors?.['required']) {
+              <span class="error-text">Username is required.</span>
+            } @else if (f['username'].touched && f['username'].errors?.['minlength']) {
+              <span class="error-text">At least 5 characters.</span>
+            } @else if (f['username'].touched && f['username'].errors?.['whitespace']) {
+              <span class="error-text">No spaces allowed.</span>
             }
-          </mat-form-field>
+          </div>
 
           <!-- Full Name -->
-          <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Full Name</mat-label>
-            <input matInput id="reg-name" formControlName="name" placeholder="Display name" autocomplete="off" />
-            @if (f['name'].errors?.['required']) {
-              <mat-error>Name is required.</mat-error>
+          <div class="custom-field">
+            <label for="reg-name">Full Name</label>
+            <div class="input-wrapper" [class.error]="f['name'].invalid && f['name'].touched">
+              <mat-icon>badge</mat-icon>
+              <input id="reg-name" formControlName="name" placeholder="Display name" autocomplete="off" />
+            </div>
+            @if (f['name'].touched && f['name'].errors?.['required']) {
+              <span class="error-text">Name is required.</span>
             }
-          </mat-form-field>
+          </div>
 
           <!-- Password -->
-          <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Password</mat-label>
-            <input matInput id="reg-password" type="password" formControlName="password" placeholder="At least 8 characters" autocomplete="new-password" />
-            @if (f['password'].errors?.['required']) {
-              <mat-error>Password is required.</mat-error>
-            } @else if (f['password'].errors?.['minlength']) {
-              <mat-error>At least 8 characters.</mat-error>
+          <div class="custom-field">
+            <label for="reg-password">Password</label>
+            <div class="input-wrapper" [class.error]="f['password'].invalid && f['password'].touched">
+              <mat-icon>lock_outline</mat-icon>
+              <input id="reg-password" type="password" formControlName="password" placeholder="Min 8 characters" autocomplete="new-password" />
+            </div>
+            @if (f['password'].touched && f['password'].errors?.['required']) {
+              <span class="error-text">Password is required.</span>
+            } @else if (f['password'].touched && f['password'].errors?.['minlength']) {
+              <span class="error-text">At least 8 characters.</span>
             }
-          </mat-form-field>
+          </div>
 
           <!-- Confirm Password -->
-          <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Confirm Password</mat-label>
-            <input matInput id="reg-confirm" type="password" formControlName="confirmPassword" placeholder="Re-enter password" autocomplete="new-password" />
-          </mat-form-field>
-          @if (form.errors?.['mismatch'] && f['confirmPassword'].touched) {
-            <p class="mismatch-error">Passwords do not match.</p>
-          }
+          <div class="custom-field">
+            <label for="reg-confirm">Confirm Password</label>
+            <div class="input-wrapper" [class.error]="(form.errors?.['mismatch'] || f['confirmPassword'].invalid) && f['confirmPassword'].touched">
+              <mat-icon>verified_user</mat-icon>
+              <input id="reg-confirm" type="password" formControlName="confirmPassword" placeholder="Re-enter password" autocomplete="new-password" />
+            </div>
+            @if (form.errors?.['mismatch'] && f['confirmPassword'].touched) {
+              <span class="error-text">Passwords do not match.</span>
+            }
+          </div>
 
-          <!-- Gender slider -->
+          <!-- Gender selection -->
           <div class="field-full">
             <label class="slider-label">
               Gender
@@ -85,25 +95,27 @@
 
           <!-- Date of Birth -->
           <div class="field-full">
-            <mat-form-field appearance="outline" floatLabel="always" class="full-width">
-              <mat-label>Date of Birth</mat-label>
-              <input matInput type="date" formControlName="dob" />
-            </mat-form-field>
+            <div class="custom-field">
+              <label for="reg-dob">Date of Birth</label>
+              <div class="input-wrapper">
+                <mat-icon>calendar_today</mat-icon>
+                <input id="reg-dob" type="date" formControlName="dob" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <mat-card-actions align="end">
-          <button mat-flat-button type="submit" [disabled]="isLoading()">
+        <div class="form-actions">
+          <button class="custom-primary-btn" type="submit" [disabled]="isLoading()">
             @if (isLoading()) {
               <mat-spinner diameter="18"></mat-spinner>
-              Creating…
+              <span>Creating Account…</span>
             } @else {
-              Create Admin Account
+              <span>Create Admin Account</span>
             }
           </button>
-        </mat-card-actions>
+        </div>
       </form>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </div>
 </div>
-

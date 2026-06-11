@@ -1,18 +1,57 @@
-<div class="page">
-  <!-- Welcome hero -->
-  <div class="hero">
-    <div class="hero-avatar">{{ (profile()?.name ?? 'U')[0].toUpperCase() }}</div>
-    <div class="hero-text">
-      <h1 class="hero-title">Welcome back, {{ profile()?.name ?? 'there' }}!</h1>
-      <p class="hero-sub">
-        You're signed in as
-        <mat-chip-set>
-          <mat-chip [highlighted]="isAdmin()" [color]="isAdmin() ? 'primary' : undefined">
-            {{ profile()?.role }}
-          </mat-chip>
-        </mat-chip-set>
-      </p>
-    </div>
-  </div>
-</div>
+@if (splash()) {
+    <app-splash-screen/>
+}
 
+<div class="app-shell">
+    <mat-toolbar class="navbar">
+        <a routerLink="/docs/dashboard" class="brand-btn">
+            <img src="logo.svg" alt="Nexa Logo" class="brand-logo">
+            <span class="brand-name">Nexa</span>
+        </a>
+
+        <a mat-button routerLink="/docs/dashboard" routerLinkActive="nav-active"
+           [routerLinkActiveOptions]="{ exact: true }">
+            Search
+        </a>
+        @if (tokenService.isLoggedIn()) {
+            <a mat-button routerLink="/profile" routerLinkActive="nav-active">
+                Profile
+            </a>
+        }
+        @if (profileStore.isAdmin()) {
+            <a mat-button routerLink="/auth/register-admin" routerLinkActive="nav-active">
+                Register Admin
+            </a>
+        }
+        <span class="spacer"></span>
+
+        <button class="theme-toggle-btn" (click)="themeService.cycleTheme()" aria-label="Toggle theme">
+            <mat-icon>{{ getThemeIcon(themeService.currentTheme()) }}</mat-icon>
+        </button>
+
+        @if (tokenService.isLoggedIn()) {
+            <span class="nav-user">{{ profileStore.profile()?.name }}</span>
+            <button mat-stroked-button (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                Sign out
+            </button>
+        } @else {
+            <a mat-flat-button color="primary" routerLink="/auth/login">
+                <mat-icon>login</mat-icon>
+                Sign in
+            </a>
+        }
+    </mat-toolbar>
+
+    <mat-sidenav-container class="main-container">
+        <mat-sidenav-content>
+            <router-outlet/>
+        </mat-sidenav-content>
+
+        <mat-sidenav #chatSidenav position="end" mode="side" class="chat-sidenav">
+            <router-outlet name="right"
+                           (activate)="chatSidenav.open(); chatOpen.set(true)"
+                           (deactivate)="chatSidenav.close(); chatOpen.set(false)"/>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>

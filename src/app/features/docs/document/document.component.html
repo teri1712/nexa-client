@@ -1,73 +1,111 @@
 <div class="document-page">
 
     <div class="doc-toolbar">
-        <button mat-button routerLink="/docs/dashboard" id="back-btn">
-            <mat-icon>arrow_back</mat-icon>
-            Back to Search
+        <button class="back-link" routerLink="/docs/dashboard">
+            <mat-icon>keyboard_backspace</mat-icon>
+            <span>Back to Knowledge Hub</span>
         </button>
     </div>
 
     @if (doc.isLoading()) {
         <div class="loading-state">
-            <mat-spinner diameter="48"></mat-spinner>
-            <p class="mat-body-medium">Loading document…</p>
+            <div class="spinner-container">
+                <mat-spinner diameter="48"></mat-spinner>
+            </div>
+            <p>Decompressing intelligence...</p>
         </div>
     }
 
     @if (doc.error()) {
-        <div class="error-state">
-            <mat-icon color="warn" style="font-size:48px;width:48px;height:48px">error_outline</mat-icon>
-            <p id="doc-error" class="mat-body-large">Document not found.</p>
-            <button mat-stroked-button routerLink="/docs/dashboard">Go back</button>
+        <div class="status-card error">
+            <div class="error-icon-box">
+                <mat-icon>sentiment_very_dissatisfied</mat-icon>
+            </div>
+            <h3>Intelligence Missing</h3>
+            <p>This document could not be located in our repository.</p>
+            <button class="custom-secondary-btn" routerLink="/docs/dashboard">Return to Hub</button>
         </div>
     }
 
     @if (doc.value(); as d) {
-        <mat-card appearance="outlined" id="doc-detail" class="doc-card">
-
-            <!-- Header row: icon + title + download -->
-            <mat-card-header>
-                <div mat-card-avatar class="doc-avatar">
-                    <mat-icon>description</mat-icon>
+        <div class="doc-layout">
+            <div class="doc-content-side">
+                <div class="doc-immersive-header">
+                    <div class="doc-badge" [attr.data-type]="d.fileType">
+                        <mat-icon>{{ d.fileType === 'PDF' ? 'picture_as_pdf' : 'description' }}</mat-icon>
+                        <span>{{ d.fileType }} Source</span>
+                    </div>
+                    <h1 class="doc-title">{{ d.title }}</h1>
+                    <div class="doc-subtitle">
+                        <mat-icon>folder_open</mat-icon>
+                        <span>{{ d.filename }}</span>
+                    </div>
                 </div>
-                <mat-card-title id="doc-title">{{ d.title }}</mat-card-title>
-                <mat-card-subtitle id="doc-filename">{{ d.filename }}</mat-card-subtitle>
-            </mat-card-header>
 
-            <mat-divider></mat-divider>
+                <div class="doc-main-card">
+                    <div class="card-section">
+                        <h3 class="section-title">Knowledge Summary</h3>
+                        <p class="doc-text">{{ d.description }}</p>
+                    </div>
 
-            <mat-card-content class="doc-content">
-                <!-- Meta chips -->
-                <mat-chip-set>
-                    <mat-chip id="doc-type">
-                        <mat-icon matChipAvatar>insert_drive_file</mat-icon>
-                        {{ d.fileType }}
-                    </mat-chip>
-                    <mat-chip>
-                        <mat-icon matChipAvatar>calendar_today</mat-icon>
-                        {{ d.createdAt | date:'mediumDate' }}
-                    </mat-chip>
-                </mat-chip-set>
+                    <div class="card-divider"></div>
 
-                <!-- Description -->
-                <p id="doc-description" class="doc-description">{{ d.description }}</p>
-            </mat-card-content>
+                    <div class="doc-metadata-row">
+                        <div class="meta-block">
+                            <span class="meta-label">Uploaded On</span>
+                            <span class="meta-value">{{ d.createdAt | date:'longDate' }}</span>
+                        </div>
+                        <div class="meta-block">
+                            <span class="meta-label">Unique Hash</span>
+                            <span class="meta-value">{{ d.id.substring(0, 12) }}...</span>
+                        </div>
+                        <div class="meta-block">
+                            <span class="meta-label">Status</span>
+                            <span class="meta-value status-active">Indexed & Secure</span>
+                        </div>
+                    </div>
+                </div>
 
-            <mat-divider></mat-divider>
+                <div class="action-bar">
+                    <button class="custom-primary-btn download-action" (click)="onDownload()" [disabled]="downloading()">
+                        @if (downloading()) {
+                            <span class="loader-dots"><span></span><span></span><span></span></span>
+                        } @else {
+                            <mat-icon>file_download</mat-icon>
+                            <span>Download Document</span>
+                        }
+                    </button>
+                </div>
+            </div>
 
-            <mat-card-actions align="start">
-                <button mat-flat-button color="primary" id="download-btn"
-                        [disabled]="downloading()" (click)="onDownload()">
-                    @if (downloading()) {
-                        <mat-spinner diameter="18"></mat-spinner>
-                    } @else {
-                        <mat-icon>download</mat-icon>
-                    }
-                    Download
-                </button>
-            </mat-card-actions>
+            <div class="doc-sidebar">
+                <div class="sidebar-widget security-widget">
+                    <h4 class="widget-title">Intelligence Protection</h4>
+                    <div class="protection-list">
+                        <div class="protection-item">
+                            <mat-icon>encrypted</mat-icon>
+                            <div class="item-info">
+                                <span class="item-name">End-to-End Encrypted</span>
+                                <span class="item-desc">AES-256 protected at rest</span>
+                            </div>
+                        </div>
+                        <div class="protection-item">
+                            <mat-icon>verified_user</mat-icon>
+                            <div class="item-info">
+                                <span class="item-name">Integrity Verified</span>
+                                <span class="item-desc">Hash signature matched</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        </mat-card>
+                <div class="sidebar-widget ai-widget">
+                    <h4 class="widget-title">AI Ready</h4>
+                    <p class="ai-text">This document has been indexed and is available for AI queries across the Nexa network.</p>
+                </div>
+            </div>
+        </div>
     }
 
+    <app-bot-bubble [docId]="id()"/>
 </div>

@@ -1,0 +1,52 @@
+/* Design Tokens - Auto-generated */
+/* Do not edit directly - modify tokens.json instead */
+
+/* === PRIMITIVES === */
+:root {
+  --primitive-color-midnight-700: #334155;
+  --primitive-color-midnight-800: #1E293B;
+  --primitive-color-midnight-900: #0F172A;
+  --primitive-color-midnight-950: #020617;
+  --primitive-color-blue-400: #60A5FA;
+  --primitive-color-blue-500: #3B82F6;
+  --primitive-color-blue-600: #2563EB;
+  --primitive-color-cyan-300: #67E8F9;
+  --primitive-color-cyan-400: #22D3EE;
+  --primitive-color-teal-500: #14B8A6;
+  --primitive-color-teal-600: #0D9488;
+  --primitive-color-slate-50: #F8FAFC;
+  --primitive-color-slate-100: #F1F5F9;
+  --primitive-color-slate-200: #E2E8F0;
+  --primitive-color-slate-400: #94A3B8;
+  --primitive-radius-sm: 6px;
+  --primitive-radius-md: 10px;
+  --primitive-radius-lg: 16px;
+  --primitive-radius-xl: 24px;
+  --primitive-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --primitive-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* === SEMANTIC === */
+:root {
+  --color-background: #020617;
+  --color-surface: #0F172A;
+  --color-primary: #2563EB;
+  --color-accent: #22D3EE;
+  --color-text: #F8FAFC;
+  --color-text-muted: #94A3B8;
+  --color-border: #1E293B;
+  --gradient-primary: linear-gradient(135deg, #0F172A 0%, #2563EB 100%);
+  --gradient-insight: linear-gradient(135deg, #0D9488 0%, #22D3EE 100%);
+}
+
+/* === COMPONENTS === */
+:root {
+  --button-primary-bg: linear-gradient(135deg, #0F172A 0%, #2563EB 100%);
+  --button-primary-text: #FFFFFF;
+  --button-secondary-border: #1E293B;
+  --card-bg: #0F172A;
+  --card-border: #1E293B;
+  --card-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --insight-panel-bg: #0F172A;
+  --insight-panel-border-accent: linear-gradient(135deg, #0D9488 0%, #22D3EE 100%);
+}

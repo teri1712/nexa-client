@@ -1,110 +1,107 @@
-<div class="login-page">
-    <mat-card class="login-card">
-        <mat-card-content>
-            <!-- Brand -->
-            <div class="brand">
+<div class="login-layout">
+    <!-- Hero Side -->
+    <div class="login-hero">
+        <div class="hero-content">
+            <div class="brand-large">
+                <div class="brand-icon-xl">N</div>
+                <span class="brand-text">Nexa</span>
+            </div>
+            
+            <div class="hero-main">
+                <h1 class="hero-title">Connect to your company intelligence.</h1>
+                <p class="hero-subtitle">Securely access, search, and manage your organization's most important documents with AI-powered insights.</p>
+            </div>
+            
+            <div class="hero-footer">
+                <div class="trust-badge">
+                    <mat-icon>verified_user</mat-icon>
+                    Enterprise Grade Security
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual"></div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="login-main">
+        <div class="login-container">
+            <!-- Brand Mobile -->
+            <div class="brand-mobile">
                 <div class="brand-icon">N</div>
                 <h1 class="brand-name">Nexa</h1>
-                <p class="brand-tagline">Your company document hub</p>
             </div>
 
-            <!-- Error banner -->
-            @if (errorMessage()) {
-                <div class="alert alert--error" role="alert">
-                    <mat-icon>error_outline</mat-icon>
-                    {{ errorMessage() }}
+            <div class="form-card">
+                <div class="form-header">
+                    <h2 class="form-title">Admin Access</h2>
+                    <p class="form-subtitle">Please sign in with your admin credentials</p>
                 </div>
-            }
 
-            <!-- Google Sign-In section -->
-            @if (!showAdminForm()) {
-                <p class="section-label">Sign in with your company account</p>
-
-                @if (isGoogleLoading()) {
-                    <div class="loading-row">
-                        <mat-spinner diameter="20"></mat-spinner>
-                        <span>Signing you in…</span>
-                    </div>
-                } @else {
-                    <div id="google-signin-btn" class="google-btn-wrapper">
-                        @if (!googleScriptReady()) {
-                            <div class="google-fallback">
-                                <mat-spinner diameter="16"></mat-spinner>
-                                Loading Google Sign-In…
-                            </div>
-                        }
+                <!-- Error banner -->
+                @if (errorMessage()) {
+                    <div class="alert alert--error" role="alert">
+                        <mat-icon>error_outline</mat-icon>
+                        {{ errorMessage() }}
                     </div>
                 }
 
-                <div class="divider"><span>or</span></div>
-
-                <button mat-button type="button" (click)="toggleAdminForm()">
-                    Sign in as Admin
-                    <mat-icon iconPositionEnd>chevron_right</mat-icon>
-                </button>
-            }
-
-            <!-- Admin login form -->
-            @if (showAdminForm()) {
+                <!-- Admin login form -->
                 <div class="admin-section">
-                    <button mat-button type="button" (click)="toggleAdminForm()">
-                        <mat-icon>chevron_left</mat-icon>
-                        Back
-                    </button>
-                    <h2 class="admin-title">Admin Sign in</h2>
-
                     <form [formGroup]="adminForm" (ngSubmit)="submitAdminLogin()" novalidate>
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Username</mat-label>
-                            <input
-                                    matInput
-                                    id="username"
-                                    formControlName="username"
-                                    autocomplete="username"
-                                    placeholder="Enter your username"
-                            />
-                            @if (usernameCtrl.errors?.['required']) {
-                                <mat-error>Username is required.</mat-error>
-                            } @else if (usernameCtrl.errors?.['minlength']) {
-                                <mat-error>Minimum 5 characters.</mat-error>
-                            } @else if (usernameCtrl.errors?.['maxlength']) {
-                                <mat-error>Maximum 20 characters.</mat-error>
+                        <div class="custom-field">
+                            <label for="username">Username</label>
+                            <div class="input-wrapper" [class.error]="usernameCtrl.invalid && usernameCtrl.touched">
+                                <mat-icon>person_outline</mat-icon>
+                                <input
+                                        id="username"
+                                        formControlName="username"
+                                        autocomplete="username"
+                                        placeholder="Enter your username"
+                                />
+                            </div>
+                            @if (usernameCtrl.touched && usernameCtrl.errors?.['required']) {
+                                <span class="error-text">Username is required.</span>
+                            } @else if (usernameCtrl.touched && usernameCtrl.errors?.['minlength']) {
+                                <span class="error-text">Minimum 5 characters.</span>
                             }
-                        </mat-form-field>
+                        </div>
 
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Password</mat-label>
-                            <input
-                                    matInput
-                                    id="password"
-                                    type="password"
-                                    formControlName="password"
-                                    autocomplete="current-password"
-                                    placeholder="Enter your password"
-                            />
-                            @if (passwordCtrl.errors?.['required']) {
-                                <mat-error>Password is required.</mat-error>
+                        <div class="custom-field">
+                            <label for="password">Password</label>
+                            <div class="input-wrapper" [class.error]="passwordCtrl.invalid && passwordCtrl.touched">
+                                <mat-icon>lock_outline</mat-icon>
+                                <input
+                                        id="password"
+                                        type="password"
+                                        formControlName="password"
+                                        autocomplete="current-password"
+                                        placeholder="Enter your password"
+                                />
+                            </div>
+                            @if (passwordCtrl.touched && passwordCtrl.errors?.['required']) {
+                                <span class="error-text">Password is required.</span>
                             }
-                        </mat-form-field>
+                        </div>
 
                         <button
-                                mat-flat-button
+                                class="custom-primary-btn full-width"
                                 type="submit"
-                                id="vcll"
-                                class="full-width submit-btn"
                                 [disabled]="isAdminLoading()"
                         >
                             @if (isAdminLoading()) {
                                 <mat-spinner diameter="18"></mat-spinner>
-                                Signing in…
+                                <span>Verifying…</span>
                             } @else {
-                                Sign In
+                                <span>Sign In</span>
                             }
                         </button>
                     </form>
                 </div>
-            }
-        </mat-card-content>
-    </mat-card>
+            </div>
+            
+            <div class="login-footer">
+                <p>&copy; 2024 Nexa Document Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
 </div>
-

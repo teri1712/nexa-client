@@ -4,7 +4,7 @@ import {environment} from "../../../environments/environment";
 import {ITokenStore} from "../models/token-store.interface";
 
 @Injectable()
-export class BotService {
+export class FillmentService {
     private tokenStore = inject(ITokenStore);
 
     fill(placeholderSeq: number) {
@@ -12,7 +12,7 @@ export class BotService {
         const token = this.tokenStore.getAccessToken();
         const body = new URLSearchParams({placeholderSequence: placeholderSeq.toString()});
 
-        fetch(environment.apiUrl + '/bot/fill', {
+        fetch(environment.apiUrl + '/fill', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "primitive": {
+    "color": {
+      "midnight": {
+        "950": { "$value": "#020617", "$type": "color" },
+        "900": { "$value": "#0F172A", "$type": "color" },
+        "800": { "$value": "#1E293B", "$type": "color" },
+        "700": { "$value": "#334155", "$type": "color" }
+      },
+      "blue": {
+        "600": { "$value": "#2563EB", "$type": "color" },
+        "500": { "$value": "#3B82F6", "$type": "color" },
+        "400": { "$value": "#60A5FA", "$type": "color" }
+      },
+      "cyan": {
+        "400": { "$value": "#22D3EE", "$type": "color" },
+        "300": { "$value": "#67E8F9", "$type": "color" }
+      },
+      "teal": {
+        "600": { "$value": "#0D9488", "$type": "color" },
+        "500": { "$value": "#14B8A6", "$type": "color" }
+      },
+      "slate": {
+        "50": { "$value": "#F8FAFC", "$type": "color" },
+        "100": { "$value": "#F1F5F9", "$type": "color" },
+        "200": { "$value": "#E2E8F0", "$type": "color" },
+        "400": { "$value": "#94A3B8", "$type": "color" }
+      }
+    },
+    "radius": {
+      "sm": { "$value": "6px", "$type": "dimension" },
+      "md": { "$value": "10px", "$type": "dimension" },
+      "lg": { "$value": "16px", "$type": "dimension" },
+      "xl": { "$value": "24px", "$type": "dimension" }
+    },
+    "shadow": {
+      "md": {
+        "$value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "$type": "shadow"
+      },
+      "lg": {
+        "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "$type": "shadow"
+      }
+    }
+  },
+  "semantic": {
+    "color": {
+      "background": { "$value": "#020617", "$type": "color" },
+      "surface": { "$value": "#0F172A", "$type": "color" },
+      "primary": { "$value": "#2563EB", "$type": "color" },
+      "accent": { "$value": "#22D3EE", "$type": "color" },
+      "text": { "$value": "#F8FAFC", "$type": "color" },
+      "text-muted": { "$value": "#94A3B8", "$type": "color" },
+      "border": { "$value": "#1E293B", "$type": "color" }
+    },
+    "gradient": {
+      "primary": {
+        "$value": "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+        "$type": "gradient"
+      },
+      "insight": {
+        "$value": "linear-gradient(135deg, #0D9488 0%, #22D3EE 100%)",
+        "$type": "gradient"
+      }
+    }
+  },
+  "component": {
+    "button": {
+      "primary-bg": {
+        "$value": "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+        "$type": "gradient"
+      },
+      "primary-text": { "$value": "#FFFFFF", "$type": "color" },
+      "secondary-border": { "$value": "#1E293B", "$type": "color" }
+    },
+    "card": {
+      "bg": { "$value": "#0F172A", "$type": "color" },
+      "border": { "$value": "#1E293B", "$type": "color" },
+      "shadow": {
+        "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "$type": "shadow"
+      }
+    },
+    "insight-panel": {
+      "bg": { "$value": "#0F172A", "$type": "color" },
+      "border-accent": {
+        "$value": "linear-gradient(135deg, #0D9488 0%, #22D3EE 100%)",
+        "$type": "gradient"
+      }
+    }
+  }
+}

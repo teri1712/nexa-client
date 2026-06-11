@@ -5,18 +5,14 @@ import {DocType} from '../../../core/models/doc.models';
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {switchMap} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {Router} from "@angular/router";
+import {CommonModule} from "@angular/common";
 
 @Component({
     selector: 'app-add-document',
     standalone: true,
-    imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinner],
+    imports: [ReactiveFormsModule, MatIconModule, CommonModule],
     templateUrl: './add-document.html',
     styleUrl: './add-document.scss',
 })
@@ -24,7 +20,7 @@ export class AddDocument {
     private readonly uploadService = inject(FileService);
     private readonly docService = inject(DocService);
     private readonly snackbar = inject(MatSnackBar);
-
+    private readonly router = inject(Router)
     private readonly fb = inject(NonNullableFormBuilder);
     readonly form = this.fb.group({
         title: ['', Validators.required],
@@ -68,11 +64,11 @@ export class AddDocument {
                     type: type
                 })
             })).subscribe({
-            next: () => {
+            next: (doc) => {
                 this.snackbar.open('Document added successfully', 'Close', {
                     duration: 2000,
                 });
-                this.form.reset();
+                this.router.navigate(['docs', doc.id])
             },
             error: (err) => {
                 console.error(err);
