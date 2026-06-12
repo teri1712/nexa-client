@@ -241,6 +241,17 @@
     margin-bottom: 1.5rem;
     color: var(--mat-sys-on-surface);
   }
+
+  .engine-desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 1.5rem;
+
+    strong {
+      color: var(--mat-sys-primary);
+    }
+  }
 }
 
 .protection-list {

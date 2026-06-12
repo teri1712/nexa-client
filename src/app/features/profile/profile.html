@@ -1,11 +1,5 @@
 <div class="profile-page">
     <div class="profile-container">
-        <!-- Header -->
-        <div class="page-header">
-            <h1 class="page-title">User Account</h1>
-            <p class="page-subtitle">Manage your personal information and security settings.</p>
-        </div>
-
         <!-- Layout -->
         @if (profileResource.isLoading()) {
             <div class="loading-state">
@@ -25,41 +19,55 @@
 
                 <!-- Sidebar -->
                 <div class="sidebar">
-                    <div class="user-card-mini">
-                        <div class="avatar-large">{{ avatarInitials() }}</div>
+                    <div class="user-card-immersive">
+                        <div class="avatar-glow">
+                            <div class="avatar-large">{{ avatarInitials() }}</div>
+                        </div>
                         <div class="user-info">
                             <h2 class="user-name">{{ p.name }}</h2>
                             <div class="user-meta">
                                 <span class="user-handle">@{{ p.username }}</span>
-                                <span class="user-role">{{ p.role }}</span>
+                                <span class="user-role-badge">{{ p.role }}</span>
                             </div>
                         </div>
                     </div>
 
                     <nav class="side-nav">
-                        <button [class.active]="activeTab() === 'profile'" (click)="setTab('profile')">
+                        <button class="nav-btn" [class.active]="activeTab() === 'profile'" (click)="setTab('profile')">
                             <mat-icon>person_outline</mat-icon>
-                            Profile Details
+                            <span>Profile Details</span>
                         </button>
-                        <button [class.active]="activeTab() === 'security'" (click)="setTab('security')">
+                        <button class="nav-btn" [class.active]="activeTab() === 'security'" (click)="setTab('security')">
                             <mat-icon>lock_outline</mat-icon>
-                            Security & Password
+                            <span>Security & Password</span>
                         </button>
                     </nav>
+
+                    <div class="account-status-card">
+                        <mat-icon>verified_user</mat-icon>
+                        <div class="status-info">
+                            <span class="status-label">Account Verified</span>
+                            <span class="status-desc">Enterprise member</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Content Area -->
                 <div class="main-content">
+                    <div class="page-header">
+                        <h1 class="page-title">User Account</h1>
+                        <p class="page-subtitle">Manage your personal information and security settings.</p>
+                    </div>
 
                     <!-- Profile Tab -->
                     @if (activeTab() === 'profile') {
                         <div class="tab-content">
-                            <div class="section-header">
-                                <h3 class="section-title">Personal Information</h3>
-                                <p class="section-desc">Update your display name and basic details.</p>
-                            </div>
+                            <div class="form-card profile-form-card">
+                                <div class="section-header">
+                                    <h3 class="section-title">Personal Information</h3>
+                                    <p class="section-desc">Update your display name and basic details.</p>
+                                </div>
 
-                            <div class="form-card">
                                 @if (profileSuccess()) {
                                     <div class="alert alert--success">{{ profileSuccess() }}</div>
                                 }
@@ -67,7 +75,7 @@
                                     <div class="alert alert--error">{{ profileError() }}</div>
                                 }
 
-                                <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+                                <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="form-grid">
                                     <div class="custom-field">
                                         <label for="p-name">Full Name</label>
                                         <div class="input-wrapper"
@@ -81,6 +89,14 @@
                                     </div>
 
                                     <div class="custom-field">
+                                        <label for="dob">Date of Birth</label>
+                                        <div class="input-wrapper">
+                                            <mat-icon>calendar_today</mat-icon>
+                                            <input id="dob" type="date" formControlName="dob"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="custom-field full-width">
                                         <label>Gender Preference</label>
                                         <div class="gender-selection">
                                             <div class="gender-header">
@@ -96,20 +112,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="custom-field">
-                                        <label for="dob">Date of Birth</label>
-                                        <div class="input-wrapper">
-                                            <mat-icon>calendar_today</mat-icon>
-                                            <input id="dob" type="date" formControlName="dob"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-footer">
+                                    <div class="form-footer full-width">
                                         <button class="custom-primary-btn" type="submit" [disabled]="isProfileLoading()">
                                             @if (isProfileLoading()) {
                                                 <mat-spinner diameter="20"></mat-spinner>
                                                 <span>Saving...</span>
                                             } @else {
+                                                <mat-icon>save</mat-icon>
                                                 <span>Save Changes</span>
                                             }
                                         </button>
@@ -122,12 +131,12 @@
                     <!-- Security Tab -->
                     @if (activeTab() === 'security') {
                         <div class="tab-content">
-                            <div class="section-header">
-                                <h3 class="section-title">Change Password</h3>
-                                <p class="section-desc">Change your account password to stay secure.</p>
-                            </div>
+                            <div class="form-card security-form-card">
+                                <div class="section-header">
+                                    <h3 class="section-title">Change Password</h3>
+                                    <p class="section-desc">Change your account password to stay secure.</p>
+                                </div>
 
-                            <div class="form-card">
                                 @if (passwordSuccess()) {
                                     <div class="alert alert--success">{{ passwordSuccess() }}</div>
                                 }
@@ -135,8 +144,8 @@
                                     <div class="alert alert--error">{{ passwordError() }}</div>
                                 }
 
-                                <form [formGroup]="passwordForm" (ngSubmit)="savePassword()">
-                                    <div class="custom-field">
+                                <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="form-grid">
+                                    <div class="custom-field full-width">
                                         <label for="s-current">Current Password</label>
                                         <div class="input-wrapper"
                                              [class.error]="sf['currentPassword'].invalid && sf['currentPassword'].touched">
@@ -166,13 +175,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-footer">
+                                    <div class="form-footer full-width">
                                         <button class="custom-primary-btn" type="submit"
                                                 [disabled]="isPasswordLoading()">
                                             @if (isPasswordLoading()) {
                                                 <mat-spinner diameter="20"></mat-spinner>
-                                                <span>Updating Password...</span>
+                                                <span>Updating...</span>
                                             } @else {
+                                                <mat-icon>key</mat-icon>
                                                 <span>Update Password</span>
                                             }
                                         </button>
