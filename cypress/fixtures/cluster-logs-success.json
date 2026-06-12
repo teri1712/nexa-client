@@ -1,0 +1,26 @@
+{
+  "content": [
+    {
+      "id": 3,
+      "date": "2026-06-12",
+      "status": "RUNNING",
+      "message": "Clustering is in progress..."
+    },
+    {
+      "id": 2,
+      "date": "2026-06-11",
+      "status": "COMPLETED",
+      "message": "Clustering completed successfully."
+    },
+    {
+      "id": 1,
+      "date": "2026-06-10",
+      "status": "FAILED",
+      "message": "Clustering failed due to timeout."
+    }
+  ],
+  "totalElements": 3,
+  "totalPages": 1,
+  "size": 10,
+  "number": 0
+}
