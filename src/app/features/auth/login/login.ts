@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
         this.authService
             .loginWithCredentials({username: username!, password: password!})
             .subscribe({
-                next: () => this.router.navigate(['/docs/dashboard']),
+                next: () => this.router.navigate(['/home/docs/dashboard']),
                 error: (err: HttpErrorResponse) => {
                     this.isAdminLoading.set(false);
                     this.errorMessage.set(this.extractError(err));

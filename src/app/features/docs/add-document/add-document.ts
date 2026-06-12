@@ -68,7 +68,7 @@ export class AddDocument {
                 this.snackbar.open('Document added successfully', 'Close', {
                     duration: 2000,
                 });
-                this.router.navigate(['docs', doc.id])
+                this.router.navigate(['home', 'docs', doc.id])
             },
             error: (err) => {
                 console.error(err);

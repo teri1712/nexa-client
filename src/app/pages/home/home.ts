@@ -5,7 +5,7 @@ import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/route
 import {IAuthService} from "../../core/models/auth-service.interface";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
-import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 import {MatToolbar} from "@angular/material/toolbar";
 import {IProfileStore, ITokenStore} from "../../core/models/token-store.interface";
 import {ThemeService} from "../../core/services/theme.service";
@@ -14,7 +14,7 @@ import {SplashScreenComponent} from "../../features/splash-screen/splash-screen"
 
 @Component({
     selector: 'app-home',
-    imports: [MatChipsModule, MatButton, MatIcon, MatSidenav, MatSidenavContainer, MatSidenavContent, MatToolbar, RouterLink, RouterLinkActive, RouterOutlet, SplashScreenComponent],
+    imports: [MatChipsModule, MatButton, MatIcon, MatSidenavContainer, MatSidenavContent, MatToolbar, RouterLink, RouterLinkActive, RouterOutlet, SplashScreenComponent],
     templateUrl: './home.html',
     styleUrl: './home.scss',
 })
@@ -26,7 +26,6 @@ export class HomeComponent {
     protected readonly profileStore = inject(IProfileStore);
     protected readonly themeService = inject(ThemeService);
     private readonly profileService = inject(ProfileService)
-    protected readonly chatOpen = signal(false);
 
     protected splash = signal(true)
 

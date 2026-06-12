@@ -1,7 +1,18 @@
 :host {
   display: block;
-  min-height: calc(100dvh - 64px);
+  height: calc(100dvh - 64px);
   background: var(--mat-sys-surface-container-lowest);
+}
+
+.doc-sidenav-container {
+  height: 100%;
+  background: transparent;
+}
+
+.chat-sidenav {
+  width: 400px;
+  border-left: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface);
 }
 
 .document-page {
