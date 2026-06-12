@@ -43,6 +43,7 @@ export const routes: Routes = [
                 path: 'docs/:docId/messages',
                 outlet: 'right',
                 runGuardsAndResolvers: 'always',
+                canActivate: [authGuard],
                 providers: [MessageService],
                 loadComponent: () => import('./features/message-list/message-list.component').then(m => m.MessageListComponent),
             },
