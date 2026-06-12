@@ -77,7 +77,8 @@
                             <div class="skeleton-line wide"></div>
                         </div>
                     } @else if (suggestions.value()) {
-                        <div id="suggestion-box" class="suggestion-text markdown-content" [innerHTML]="formattedSuggestion()"></div>
+                        <div id="suggestion-box" class="suggestion-text markdown-content"
+                             [innerHTML]="formattedSuggestion()"></div>
                     } @else if (suggestions.error()) {
                         <p class="error-text">Failed to generate AI overview.</p>
                     }
@@ -126,7 +127,7 @@
 
                         <div id="results-list" class="doc-list">
                             @for (doc of page.docs; track doc.id) {
-                                <a class="doc-item" [attr.data-doc-id]="doc.id" [routerLink]="'/docs/' + doc.id">
+                                <a class="doc-item" [attr.data-doc-id]="doc.id" [routerLink]="'/home/docs/' + doc.id">
                                     <div class="doc-icon-wrapper" [attr.data-type]="doc.fileType">
                                         <mat-icon>{{
                                                 doc.fileType === 'PDF' ? 'picture_as_pdf' : 'description'
@@ -160,7 +161,7 @@
 </div>
 
 @if (profileStore.isAdmin()) {
-    <a class="add-doc-fab" routerLink="/docs/new" title="Upload Document">
+    <a class="add-doc-fab" routerLink="/home/docs/new" title="Upload Document">
         <mat-icon>add</mat-icon>
     </a>
 }

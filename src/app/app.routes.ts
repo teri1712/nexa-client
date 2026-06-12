@@ -4,7 +4,6 @@ import {adminGuard} from './core/guards/admin.guard';
 import {FileService} from "./core/services/file.service";
 import {DocService} from "./core/services/doc.service";
 import {ProfileService} from "./core/services/profile.service";
-import {MessageService} from "./core/services/message.service";
 import {HomeComponent} from "./pages/home/home";
 import {DocDashboardComponent} from "./features/docs/dashboard/doc-dashboard.component";
 
@@ -29,7 +28,7 @@ export const routes: Routes = [
         ],
     },
     {
-        path: '',
+        path: 'home',
         component: HomeComponent,
         providers: [ProfileService],
         children: [
@@ -40,14 +39,6 @@ export const routes: Routes = [
                     import('./features/profile/profile').then(m => m.ProfileComponent),
             },
             {
-                path: 'docs/:docId/messages',
-                outlet: 'right',
-                runGuardsAndResolvers: 'always',
-                canActivate: [authGuard],
-                providers: [MessageService],
-                loadComponent: () => import('./features/message-list/message-list.component').then(m => m.MessageListComponent),
-            },
-            {
                 path: 'docs',
                 providers: [DocService, FileService],
                 component: DocDashboardComponent,
@@ -55,4 +46,9 @@ export const routes: Routes = [
             },
         ]
     },
+    {
+        path: '',
+        redirectTo: '/home/docs/dashboard',
+        pathMatch: 'full'
+    }
 ];

@@ -16,7 +16,8 @@ export const appConfig: ApplicationConfig = {
         provideZonelessChangeDetection(),
         provideAnimationsAsync(),
         provideRouter(routes, withComponentInputBinding(), withRouterConfig({
-            onSameUrlNavigation: 'reload'
+            onSameUrlNavigation: 'reload',
+            paramsInheritanceStrategy: 'always'
         })),
         provideHttpClient(withInterceptors([authInterceptor])),
         // AuthService extends TokenStore — it is the single owner of session state.

@@ -1,5 +1,5 @@
 import {Component, HostListener, inject, input} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 
@@ -12,14 +12,15 @@ import {MatIconModule} from "@angular/material/icon";
 })
 export class BotBubbleComponent {
       router = inject(Router);
+      route = inject(ActivatedRoute);
       docId = input<string>();
 
       @HostListener('click')
       onClick() {
             this.router.navigate([{
                   outlets: {
-                        right: ['docs', this.docId(), 'messages']
+                        right: ['messages']
                   }
-            }]);
+            }], { relativeTo: this.route });
       }
 }

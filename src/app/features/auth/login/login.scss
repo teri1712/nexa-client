@@ -81,6 +81,24 @@
   font-size: 1.25rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+}
+
+.hero-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 600px;
+  
+  strong {
+    color: white;
+  }
+}
+
+.hero-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .trust-badge {
