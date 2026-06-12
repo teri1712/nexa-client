@@ -121,7 +121,7 @@ export class ProfileComponent implements OnInit {
             .updateProfile({
                 name: name ?? undefined,
                 gender: gender ?? undefined,
-                dob: dob ? new Date(dob).toISOString() : undefined,
+                dob: dob ? new Date(dob).toISOString().split('T')[0] : undefined,
             })
             .subscribe({
                 next: () => {
