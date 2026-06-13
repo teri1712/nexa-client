@@ -17,6 +17,7 @@ describe('Profile Management', () => {
                 }
             });
         })
+        cy.visit('/profile');
     });
 
 
@@ -44,7 +45,7 @@ describe('Profile Management', () => {
 
 
     it('should be able to navigate to the Security tab to change their password', () => {
-        cy.contains('Security').click();
+        cy.contains('Security & Password').click();
         cy.contains('Change Password').should('be.visible');
         cy.get('#s-current').should('be.visible');
         cy.get('#s-new').should('be.visible');
@@ -61,7 +62,7 @@ describe('Profile Management', () => {
             cy.intercept('POST', '**/login', {statusCode: 200, body: data});
         })
 
-        cy.contains('Security').click();
+        cy.contains('Security & Password').click();
 
         cy.get('#s-current').type('superadmin123');
         cy.get('#s-new').type('newsecurepassword');
@@ -80,7 +81,7 @@ describe('Profile Management', () => {
         })
 
 
-        cy.contains('Security').click();
+        cy.contains('Security & Password').click();
 
         cy.get('#s-current').type('wrongcurrentpassword');
         cy.get('#s-new').type('newsecurepassword');
@@ -92,7 +93,7 @@ describe('Profile Management', () => {
     });
 
     it('mismatched new and confirm passwords shows a validation error', () => {
-        cy.contains('Security').click();
+        cy.contains('Security & Password').click();
 
         cy.get('#s-current').type('superadmin123');
         cy.get('#s-new').type('newpassword1');
