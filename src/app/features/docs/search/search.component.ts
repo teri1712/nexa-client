@@ -5,7 +5,7 @@ import {SuggestService} from '../../../core/services/suggest.service';
 import {FaqService} from '../../../core/services/faq.service';
 import {rxResource, toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
@@ -47,6 +47,7 @@ import {marked} from 'marked';
 export class SearchComponent {
     queryString = new FormControl('', Validators.required);
     private readonly sanitizer = inject(DomSanitizer);
+    private readonly router = inject(Router);
 
     private readonly pageIndex = signal<DocItem | undefined>(undefined);
     query = signal<string>('');
@@ -116,8 +117,15 @@ export class SearchComponent {
         const val = this.suggestions.value();
         if (!val) return '';
 
-        // Pure, standard marked parsing with no pre-processing
-        const html = marked.parse(val) as string;
+        const renderer = new marked.Renderer();
+
+        renderer.text = ({text}: { text: string }) => {
+            return text.replace(/@<([^_]+)_([^>]+)>/g, (match, id, filename) => {
+                return `<span class="citation-chip" data-doc-id="${id}">${filename}</span>`;
+            });
+        };
+
+        const html = marked.parse(val, {renderer}) as string;
         return this.sanitizer.bypassSecurityTrustHtml(html);
     });
 
@@ -146,6 +154,17 @@ export class SearchComponent {
     onFaqClick(question: string) {
         this.queryString.setValue(question);
         this.onQueryButtonClick();
+    }
+
+    onSuggestionClick(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+        const chip = target.closest('.citation-chip') as HTMLElement;
+        if (chip) {
+            const docId = chip.getAttribute('data-doc-id');
+            if (docId) {
+                this.router.navigate(['/home/docs', docId]);
+            }
+        }
     }
 
 

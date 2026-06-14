@@ -368,6 +368,39 @@
         margin: 2rem 0;
         opacity: 0.6;
       }
+
+      .citation-chip {
+        display: inline-flex;
+        align-items: center;
+        background: var(--mat-sys-surface-container-high);
+        color: var(--mat-sys-primary);
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all var(--app-transition-fast);
+        border: 1px solid var(--mat-sys-outline-variant);
+        margin: 0 4px;
+        vertical-align: middle;
+        box-shadow: var(--app-shadow-sm);
+
+        &:hover {
+          background: var(--app-gradient-primary);
+          color: white !important;
+          border-color: transparent;
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+          transform: translateY(-2px);
+        }
+
+        &::before {
+          content: 'link';
+          font-family: 'Material Icons';
+          font-size: 16px;
+          margin-right: 6px;
+          color: inherit;
+        }
+      }
     }
   }
 }
