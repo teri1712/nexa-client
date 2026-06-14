@@ -1,98 +1,106 @@
 <div class="dashboard-container">
-  <header class="dashboard-header">
-    <div class="header-content">
-      <h1>FAQ Management</h1>
-      <p class="subtitle">Monitor and orchestrate automated clustering processes</p>
-    </div>
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>FAQ Management</h1>
+            <p class="subtitle">Monitor and orchestrate automated clustering processes</p>
+        </div>
 
-    <div class="cluster-status-card">
-      <div class="status-info">
-        <span class="label">Daily Cluster Pulse</span>
-        @if (todayLog()) {
-          <span class="status-tag" [attr.data-status]="todayLog()?.status">
+        <div class="cluster-status-card">
+            <div class="status-info">
+                <span class="label">Daily Cluster Pulse</span>
+                @if (todayLog()) {
+                    <span class="status-tag" [attr.data-status]="todayLog()?.status">
             @if (todayLog()?.status === LogStatus.RUNNING || todayLog()?.status === LogStatus.CREATED) {
-              <mat-spinner diameter="18"></mat-spinner>
+                <mat-spinner diameter="18"></mat-spinner>
             } @else {
-              <mat-icon>{{ todayLog()?.status === LogStatus.COMPLETED ? 'check_circle' : 'error' }}</mat-icon>
+                <mat-icon>{{ todayLog()?.status === LogStatus.COMPLETED ? 'check_circle' : 'error' }}</mat-icon>
             }
-            {{ todayLog()?.status }}
+                        {{ todayLog()?.status }}
           </span>
-        } @else {
-          <span class="status-tag" data-status="NONE">
-            <mat-icon>pending</mat-icon>
-            IDLE
-          </span>
-        }
-      </div>
+                } @else {
+                    <span class="status-tag" data-status="NONE">
+                        <mat-icon>pending</mat-icon>
+                        IDLE
+                      </span>
+                }
+            </div>
 
-      <div class="actions">
-        @if (!todayLog()) {
-          <button mat-flat-button class="start-btn" (click)="triggerCluster()" [disabled]="isTriggering()">
-            <mat-icon>play_arrow</mat-icon>
-            Initialize Cluster
-          </button>
-        } @else if (todayLog()?.status === LogStatus.FAILED) {
-          <button mat-flat-button class="restart-btn" (click)="triggerCluster()" [disabled]="isTriggering()">
-            <mat-icon>refresh</mat-icon>
-            Resume Process
-          </button>
-        }
-      </div>
-    </div>
-  </header>
+            <div class="actions">
+                @if (!todayLog()) {
+                    @if (isTriggering()) {
+                        <mat-spinner diameter="18"></mat-spinner>
+                    } @else {
+                        <button mat-flat-button class="start-btn" (click)="triggerCluster()">
+                            <mat-icon>play_arrow</mat-icon>
+                            Initialize Cluster
+                        </button>
+                    }
+                } @else if (todayLog()?.status === LogStatus.FAILED) {
+                    @if (isTriggering()) {
+                        <mat-spinner diameter="18"></mat-spinner>
+                    } @else {
+                        <button mat-flat-button class="restart-btn" (click)="triggerCluster()">
+                            <mat-icon>refresh</mat-icon>
+                            Resume Process
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    </header>
 
-  <main class="dashboard-body">
-    <div class="table-container">
-      <table mat-table [dataSource]="logs()?.content || []" class="logs-table">
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef> Analysis Date </th>
-          <td mat-cell *matCellDef="let log" class="date-cell"> 
-            {{ log.date | date:'MMMM d, yyyy' }} 
-          </td>
-        </ng-container>
+    <main class="dashboard-body">
+        <div class="table-container">
+            <table mat-table [dataSource]="logs()?.content || []" class="logs-table">
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef> Analysis Date</th>
+                    <td mat-cell *matCellDef="let log" class="date-cell">
+                        {{ log.date | date:'MMMM d, yyyy' }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef> Lifecycle </th>
-          <td mat-cell *matCellDef="let log">
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Lifecycle</th>
+                    <td mat-cell *matCellDef="let log">
             <span class="status-cell" [attr.data-status]="log.status">
               {{ log.status }}
             </span>
-          </td>
-        </ng-container>
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="message">
-          <th mat-header-cell *matHeaderCellDef> System Feedback </th>
-          <td mat-cell *matCellDef="let log" class="message-cell"> 
-            {{ log.message || 'No additional logs recorded' }} 
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="message">
+                    <th mat-header-cell *matHeaderCellDef> System Feedback</th>
+                    <td mat-cell *matCellDef="let log" class="message-cell">
+                        {{ log.message || 'No additional logs recorded' }}
+                    </td>
+                </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
 
-      @if (isLoading()) {
-        <div class="loading-overlay">
-          <mat-spinner diameter="48"></mat-spinner>
+            @if (isLoading()) {
+                <div class="loading-overlay">
+                    <mat-spinner diameter="48"></mat-spinner>
+                </div>
+            }
+
+            @if (!isLoading() && (!logs() || logs()?.content?.length === 0)) {
+                <div class="empty-state">
+                    <mat-icon>analytics</mat-icon>
+                    <p>No historical telemetry discovered</p>
+                </div>
+            }
         </div>
-      }
 
-      @if (!isLoading() && (!logs() || logs()?.content?.length === 0)) {
-        <div class="empty-state">
-          <mat-icon>analytics</mat-icon>
-          <p>No historical telemetry discovered</p>
-        </div>
-      }
-    </div>
-
-    <nav class="pagination">
-      @for (page of getPages(); track page) {
-        <button (click)="loadLogs(page)"
-                [class.active]="currentPage() === page"
-                [disabled]="isLoading()">
-          {{ page + 1 }}
-        </button>
-      }
-    </nav>
-  </main>
+        <nav class="pagination">
+            @for (page of getPages(); track page) {
+                <button (click)="loadLogs(page)"
+                        [class.active]="currentPage() === page"
+                        [disabled]="isLoading()">
+                    {{ page + 1 }}
+                </button>
+            }
+        </nav>
+    </main>
 </div>

@@ -11,7 +11,7 @@ describe('FAQ Management', () => {
     });
 
     it('should show "Initialize Cluster" when today cluster is not triggered', () => {
-        cy.visit('/faqs/dashboard');
+        cy.visit('/home/faqs/dashboard');
         cy.wait('@getLogs');
         cy.wait('@getTodayStatusNone');
 
@@ -23,7 +23,7 @@ describe('FAQ Management', () => {
     it('should show "Resume Process" when today cluster has failed', () => {
         cy.intercept('GET', `**/cluster-logs/${today}`, { fixture: 'cluster-log-today-failed.json' }).as('getTodayStatusFailed');
         
-        cy.visit('/faqs/dashboard');
+        cy.visit('/home/faqs/dashboard');
         cy.wait('@getLogs');
         cy.wait('@getTodayStatusFailed');
 
@@ -52,7 +52,7 @@ describe('FAQ Management', () => {
             }
         }).as('pollingStatus');
 
-        cy.visit('/faqs/dashboard');
+        cy.visit('/home/faqs/dashboard');
         cy.wait('@pollingStatus');
         cy.contains('RUNNING').should('be.visible');
         
@@ -65,7 +65,7 @@ describe('FAQ Management', () => {
     it('should trigger cluster when "Initialize Cluster" is clicked', () => {
         cy.intercept('POST', '**/cluster-logs/trigger', { statusCode: 200, body: 'Triggered' }).as('triggerCluster');
         
-        cy.visit('/faqs/dashboard');
+        cy.visit('/home/faqs/dashboard');
         cy.contains('button', 'Initialize Cluster').click();
         cy.wait('@triggerCluster');
         
@@ -93,7 +93,7 @@ describe('FAQ Management', () => {
             number: 1
         }).as('getLogsPage1');
 
-        cy.visit('/faqs/dashboard');
+        cy.visit('/home/faqs/dashboard');
         cy.wait('@getLogsMultiPage');
         
         // Find pagination button for page 2
