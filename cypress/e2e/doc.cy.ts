@@ -9,7 +9,7 @@ describe('Doc management', () => {
     })
 
     it('should display FAQ chips and trigger search on click', () => {
-        cy.visit('/docs/dashboard');
+        cy.visit('/home/docs/dashboard');
         cy.wait('@getFaqs');
         cy.get('.quick-access').should('be.visible');
         cy.contains('Trending FAQs').should('be.visible');
@@ -20,7 +20,7 @@ describe('Doc management', () => {
     });
 
     it('should display list of doc after clicking search', () => {
-        cy.visit('/docs/dashboard');
+        cy.visit('/home/docs/dashboard');
         cy.get('#search-input').type('test');
         cy.get('.search-btn').click();
         cy.wait('@getDocs');
@@ -29,7 +29,7 @@ describe('Doc management', () => {
     });
 
     it('should display suggestion after clicking search', () => {
-        cy.visit('/docs/dashboard');
+        cy.visit('/home/docs/dashboard');
         cy.get('#search-input').type('test');
         cy.get('.search-btn').click();
         cy.wait('@getSuggestions');
@@ -37,7 +37,7 @@ describe('Doc management', () => {
     });
 
     it('should display missing query error when user click search with empty query', () => {
-        cy.visit('/docs/dashboard');
+        cy.visit('/home/docs/dashboard');
         cy.get('.search-btn').click();
         cy.contains('Query is required').should('be.visible');
     });
@@ -47,7 +47,7 @@ describe('Doc management', () => {
             cy.intercept('GET', '/api/docs/doc_001', {statusCode: 200, body: data}).as('getDocDetail')
         })
 
-        cy.visit('/docs/dashboard');
+        cy.visit('/home/docs/dashboard');
         cy.get('#search-input').type('test');
         cy.get('.search-btn').click();
         cy.wait('@getDocs');

@@ -44,6 +44,11 @@ export const routes: Routes = [
                 component: DocDashboardComponent,
                 loadChildren: () => import('./features/docs/doc.routes').then(m => m.docRoutes)
             },
+            {
+                path: 'knowledge/dashboard',
+                canActivate: [authGuard, adminGuard],
+                loadComponent: () => import('./features/knowledge/dashboard/knowledge-dashboard.component').then(m => m.KnowledgeDashboardComponent)
+            },
         ]
     },
     {

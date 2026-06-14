@@ -48,7 +48,7 @@ describe('Theme and Dark Mode', () => {
       })
     );
     
-    cy.visit('/docs/dashboard');
+    cy.visit('/home/docs/dashboard');
     cy.get('body').invoke('css', 'background-color').then(lightBg => {
       // Toggle to explicit LIGHT
       cy.get('button[aria-label="Toggle theme"]').click();

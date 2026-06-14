@@ -1,12 +1,19 @@
-/* Design Tokens - Auto-generated */
-/* Do not edit directly - modify tokens.json instead */
+/* Design Tokens - Standardized for Multi-Theme Support */
 
 /* === PRIMITIVES === */
 :root {
+  --primitive-color-midnight-50: #F8FAFC;
+  --primitive-color-midnight-100: #F1F5F9;
+  --primitive-color-midnight-200: #E2E8F0;
+  --primitive-color-midnight-300: #CBD5E1;
+  --primitive-color-midnight-400: #94A3B8;
+  --primitive-color-midnight-500: #64748B;
+  --primitive-color-midnight-600: #475569;
   --primitive-color-midnight-700: #334155;
   --primitive-color-midnight-800: #1E293B;
   --primitive-color-midnight-900: #0F172A;
   --primitive-color-midnight-950: #020617;
+
   --primitive-color-blue-400: #60A5FA;
   --primitive-color-blue-500: #3B82F6;
   --primitive-color-blue-600: #2563EB;
@@ -14,39 +21,69 @@
   --primitive-color-cyan-400: #22D3EE;
   --primitive-color-teal-500: #14B8A6;
   --primitive-color-teal-600: #0D9488;
+
   --primitive-color-slate-50: #F8FAFC;
   --primitive-color-slate-100: #F1F5F9;
   --primitive-color-slate-200: #E2E8F0;
   --primitive-color-slate-400: #94A3B8;
+
   --primitive-radius-sm: 6px;
   --primitive-radius-md: 10px;
   --primitive-radius-lg: 16px;
   --primitive-radius-xl: 24px;
+
   --primitive-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --primitive-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-/* === SEMANTIC === */
+/* === SEMANTIC (LIGHT THEME DEFAULT) === */
 :root {
-  --color-background: #020617;
-  --color-surface: #0F172A;
-  --color-primary: #2563EB;
-  --color-accent: #22D3EE;
-  --color-text: #F8FAFC;
-  --color-text-muted: #94A3B8;
-  --color-border: #1E293B;
-  --gradient-primary: linear-gradient(135deg, #0F172A 0%, #2563EB 100%);
-  --gradient-insight: linear-gradient(135deg, #0D9488 0%, #22D3EE 100%);
+  --color-background: var(--primitive-color-slate-50);
+  --color-surface: #FFFFFF;
+  --color-primary: var(--primitive-color-blue-600);
+  --color-accent: var(--primitive-color-teal-600);
+  --color-text: var(--primitive-color-midnight-900);
+  --color-text-muted: var(--primitive-color-midnight-500);
+  --color-border: var(--primitive-color-midnight-200);
+
+  --gradient-primary: linear-gradient(135deg, var(--primitive-color-blue-500) 0%, var(--primitive-color-blue-600) 100%);
+  --gradient-insight: linear-gradient(135deg, var(--primitive-color-teal-600) 0%, var(--primitive-color-cyan-400) 100%);
+
+  --button-primary-bg: var(--gradient-primary);
+  --button-primary-text: #FFFFFF;
+  --button-secondary-border: var(--color-border);
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-shadow: var(--primitive-shadow-md);
+  --insight-panel-bg: var(--color-surface);
+  --insight-panel-border-accent: var(--gradient-insight);
 }
 
-/* === COMPONENTS === */
-:root {
-  --button-primary-bg: linear-gradient(135deg, #0F172A 0%, #2563EB 100%);
-  --button-primary-text: #FFFFFF;
-  --button-secondary-border: #1E293B;
-  --card-bg: #0F172A;
-  --card-border: #1E293B;
-  --card-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --insight-panel-bg: #0F172A;
-  --insight-panel-border-accent: linear-gradient(135deg, #0D9488 0%, #22D3EE 100%);
+/* === SEMANTIC (DARK THEME OVERRIDES) === */
+@mixin dark-tokens {
+  --color-background: var(--primitive-color-midnight-950);
+  --color-surface: var(--primitive-color-midnight-900);
+  --color-primary: var(--primitive-color-blue-500);
+  --color-accent: var(--primitive-color-cyan-400);
+  --color-text: var(--primitive-color-slate-50);
+  --color-text-muted: var(--primitive-color-slate-400);
+  --color-border: var(--primitive-color-midnight-800);
+
+  --gradient-primary: linear-gradient(135deg, var(--primitive-color-midnight-900) 0%, var(--primitive-color-blue-600) 100%);
+  --gradient-insight: linear-gradient(135deg, var(--primitive-color-teal-600) 0%, var(--primitive-color-cyan-400) 100%);
+
+  --button-primary-bg: var(--gradient-primary);
+  --card-bg: var(--primitive-color-midnight-900);
+  --card-border: var(--primitive-color-midnight-800);
+  --insight-panel-bg: var(--primitive-color-midnight-900);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light-theme) {
+    @include dark-tokens;
+  }
+}
+
+html.dark-theme {
+  @include dark-tokens;
 }
