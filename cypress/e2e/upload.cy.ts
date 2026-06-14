@@ -2,7 +2,7 @@ describe('Upload documents', () => {
     beforeEach(() => {
         cy.clearLocalStorage();
         cy.loginAsAdmin();
-        cy.visit('/docs/dashboard');
+        cy.visit('/home/docs/dashboard');
     })
     it('should navigate to upload page', () => {
         cy.get('.add-doc-fab').click();

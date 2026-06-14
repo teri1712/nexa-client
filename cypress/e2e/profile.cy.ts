@@ -17,7 +17,7 @@ describe('Profile Management', () => {
                 }
             });
         })
-        cy.visit('/profile');
+        cy.visit('/home/profile');
     });
 
 

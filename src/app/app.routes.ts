@@ -45,9 +45,9 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/docs/doc.routes').then(m => m.docRoutes)
             },
             {
-                path: 'faqs/dashboard',
+                path: 'knowledge/dashboard',
                 canActivate: [authGuard, adminGuard],
-                loadComponent: () => import('./features/faq/dashboard/faq-dashboard.component').then(m => m.FaqDashboardComponent)
+                loadComponent: () => import('./features/knowledge/dashboard/knowledge-dashboard.component').then(m => m.KnowledgeDashboardComponent)
             },
         ]
     },

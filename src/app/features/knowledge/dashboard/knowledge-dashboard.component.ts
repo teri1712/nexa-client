@@ -1,7 +1,7 @@
 import {Component, effect, inject, OnInit, signal, untracked} from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
-import {FaqService} from '../../../core/services/faq.service';
-import {ClusterLogResponse, LogStatus, Page} from '../../../core/models/faq.models';
+import {IndexKnowledgeService} from '../../../core/services/index-knowledge.service';
+import {IndexLogResponse, LogStatus, Page} from '../../../core/models/index-knowledge.models';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
@@ -10,7 +10,7 @@ import {catchError, interval, of, startWith} from 'rxjs';
 import {rxResource, toSignal} from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-faq-dashboard',
+    selector: 'app-knowledge-dashboard',
     standalone: true,
     imports: [
         CommonModule,
@@ -20,13 +20,13 @@ import {rxResource, toSignal} from '@angular/core/rxjs-interop';
         MatProgressSpinnerModule,
         DatePipe
     ],
-    templateUrl: './faq-dashboard.component.html',
-    styleUrl: './faq-dashboard.component.scss'
+    templateUrl: './knowledge-dashboard.component.html',
+    styleUrl: './knowledge-dashboard.component.scss'
 })
-export class FaqDashboardComponent implements OnInit {
-    private faqService = inject(FaqService);
+export class KnowledgeDashboardComponent implements OnInit {
+    private indexService = inject(IndexKnowledgeService);
 
-    protected logs = signal<Page<ClusterLogResponse> | null>(null);
+    protected logs = signal<Page<IndexLogResponse> | null>(null);
     protected currentPage = signal(0);
     protected isLoading = signal(false);
     protected isTriggering = signal(false);
@@ -39,13 +39,13 @@ export class FaqDashboardComponent implements OnInit {
         }),
         stream: () => {
             const today = new Date().toLocaleDateString('en-CA');
-            return this.faqService.getClusterLogByDate(today).pipe(
+            return this.indexService.getIndexLogByDate(today).pipe(
                 catchError(() => of(null))
             );
         }
     });
 
-    protected todayLog = signal<ClusterLogResponse | null>(null);
+    protected todayLog = signal<IndexLogResponse | null>(null);
 
     protected readonly LogStatus = LogStatus;
     protected displayedColumns: string[] = ['date', 'status', 'message'];
@@ -67,7 +67,7 @@ export class FaqDashboardComponent implements OnInit {
 
     loadLogs(page: number) {
         this.isLoading.set(true);
-        this.faqService.getClusterLogs(page).subscribe({
+        this.indexService.getIndexLogs(page).subscribe({
             next: (data) => {
                 this.logs.set(data);
                 this.currentPage.set(page);
@@ -77,9 +77,9 @@ export class FaqDashboardComponent implements OnInit {
         });
     }
 
-    triggerCluster() {
+    triggerIndexing() {
         this.isTriggering.set(true);
-        this.faqService.triggerCluster().subscribe({
+        this.indexService.triggerIndexing().subscribe({
             next: () => {
                 this.isTriggering.set(false);
                 if (this.currentPage() === 0) {

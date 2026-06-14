@@ -14,7 +14,7 @@ describe('Messaging with bot', () => {
                 delay: 1000
             })
         })
-        cy.visit('/docs/doc_001');
+        cy.visit('/home/docs/doc_001');
         cy.get('#bot-bubble').click();
 
         cy.url().should('include', 'docs/doc_001');
@@ -38,7 +38,7 @@ describe('Messaging with bot', () => {
             delay: 1000
         })
 
-        cy.visit('/docs/doc_001');
+        cy.visit('/home/docs/doc_001');
         cy.get('#bot-bubble').click();
 
         cy.get('app-message').should('have.length', 10);
@@ -68,7 +68,7 @@ describe('Messaging with bot', () => {
             delay: 500
         })
 
-        cy.visit('/docs/doc_001');
+        cy.visit('/home/docs/doc_001');
         cy.get('#bot-bubble').click();
         cy.wait('@getInitialMessages');
 
@@ -100,7 +100,7 @@ describe('Messaging with bot', () => {
             })
         })
 
-        cy.visit('/docs/doc_001');
+        cy.visit('/home/docs/doc_001');
         cy.get('#bot-bubble').click();
 
         cy.get('#message-input').type('Tell me about Kamen Rider Decade');
@@ -132,7 +132,7 @@ describe('Messaging with bot', () => {
             })
         })
 
-        cy.visit('/docs/doc_001');
+        cy.visit('/home/docs/doc_001');
         cy.get('#bot-bubble').click();
 
         cy.get('#message-input').type('Tell me about Kamen Rider Decade');
