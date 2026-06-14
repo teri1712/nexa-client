@@ -76,9 +76,10 @@
                             <div class="skeleton-line medium"></div>
                             <div class="skeleton-line wide"></div>
                         </div>
-                    } @else if (suggestions.value()) {
+                    @} @else if (suggestions.value()) {
                         <div id="suggestion-box" class="suggestion-text markdown-content"
-                             [innerHTML]="formattedSuggestion()"></div>
+                             [innerHTML]="formattedSuggestion()"
+                             (click)="onSuggestionClick($event)"></div>
                     } @else if (suggestions.error()) {
                         <p class="error-text">Failed to generate AI overview.</p>
                     }
